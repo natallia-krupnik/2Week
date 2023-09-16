@@ -42,6 +42,7 @@ postsRouter.delete(
 
 postsRouter.delete(
     '/testing/all-data',
+    authGuardMiddleware,
     (req:Request, res: Response) =>{
         const deleteAllPosts = postsRepository.deleteAll()
         if(deleteAllPosts) {

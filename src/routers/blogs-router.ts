@@ -47,6 +47,7 @@ blogsRouter.delete(
 
 blogsRouter.delete(
     '/testing/all-date',
+    authGuardMiddleware,
     (req: Request, res:Response) =>{
         const deleteAllBlogs = blogsRepository.deleteAll()
         if(deleteAllBlogs) {
