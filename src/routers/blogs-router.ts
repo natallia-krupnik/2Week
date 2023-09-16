@@ -46,7 +46,7 @@ blogsRouter.delete(
 })
 
 blogsRouter.delete(
-    '/all-date',
+    '/testing/all-date',
     (req: Request, res:Response) =>{
         const deleteAllBlogs = blogsRepository.deleteAll()
         if(deleteAllBlogs) {

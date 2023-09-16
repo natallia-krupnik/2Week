@@ -41,7 +41,7 @@ postsRouter.delete(
 })
 
 postsRouter.delete(
-    '/all-data',
+    '/testing/all-data',
     (req:Request, res: Response) =>{
         const deleteAllPosts = postsRepository.deleteAll()
         if(deleteAllPosts) {
