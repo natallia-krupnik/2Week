@@ -16,7 +16,6 @@ export const ErrorsValidation = (req: Request, res: Response, next: NextFunction
 const ErrorsFormatter = ( error: ValidationError) => {
     switch (error.type){
         case "field":
-            console.log(error, 'in formatter')
             return  {
                 message: error.msg,
                 field: error.path

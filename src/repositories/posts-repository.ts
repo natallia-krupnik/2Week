@@ -1,5 +1,6 @@
 import {CreatePostType, PostType} from "../types/types";
 import {blogsRepository} from "./blogs-repository";
+import {randomUUID} from "crypto";
 
 let postDb: PostType[] = [
     {
@@ -35,7 +36,7 @@ export const postsRepository = {
         if (!blog) return null
 
         const newPost: PostType = {
-            id: (Math.random()).toString(),
+            id: randomUUID(),
             title,
             shortDescription,
             content,

@@ -6,6 +6,7 @@ import {authGuardMiddleware} from "../middleware/authGuardMiddleware"
 import {ValidateBlog} from "../middleware/blog/blog-validation-middleware";
 import {ErrorsValidation} from "../middleware/errorsValidation";
 import {BlogType} from "../types/types";
+import {randomUUID} from "crypto";
 
 export const blogsRouter = Router({})
 
@@ -60,7 +61,7 @@ blogsRouter.post(
     let { name, description, websiteUrl } = req.body
 
     const newBlog: BlogType = {
-        id: (Math.random()).toString(),
+        id: randomUUID(),
         name,
         description,
         websiteUrl,
