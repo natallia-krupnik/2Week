@@ -6,29 +6,29 @@ export const validatePost = (): ValidationChain[] => {
     return [
         body('title')
             .notEmpty()
-            .trim()
             .isString()
+            .trim()
             .isLength({min:1, max: 30})
             .withMessage({message: 'Invalid Name', field: 'title'}),
 
         body('shortDescription')
             .notEmpty()
-            .trim()
             .isString()
+            .trim()
             .isLength({min: 1, max: 100})
             .withMessage({message: 'Invalid shortDescription', field: 'shortDescription'}),
 
         body('content')
             .notEmpty()
-            .trim()
             .isString()
+            .trim()
             .isLength({ min: 1, max: 1000 })
             .withMessage({message: 'Invalid content', field: 'content'}),
 
         body('blogId')
             .notEmpty()
-            .trim()
             .isString()
+            .trim()
             .withMessage({message: 'Invalid blogId', field: 'blogId'}),
     ]
 }

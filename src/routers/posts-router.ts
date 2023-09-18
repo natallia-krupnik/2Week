@@ -3,7 +3,7 @@ import {RequestWithBody, RequestWithParams} from "../types/requests";
 import {HTTP_STATUSES} from "../types/statutes";
 import {postsRepository} from "../repositories/posts-repository";
 import {authGuardMiddleware} from "../middleware/authGuardMiddleware";
-import {ErrorType} from "../types/errors";
+// import {ErrorType} from "../types/errors";
 import {errorsPostValidation, validatePost} from "../middleware/post/post-validation-middleware";
 
 export const postsRouter = Router({})
@@ -40,16 +40,6 @@ postsRouter.delete(
         res.status(HTTP_STATUSES.no_content_204).send('No content')
 })
 
-postsRouter.delete(
-    '/testing/all-data',
-    authGuardMiddleware,
-    (req:Request, res: Response) =>{
-        const deleteAllPosts = postsRepository.deleteAll()
-        if(deleteAllPosts) {
-            res.status(HTTP_STATUSES.no_content_204).send('All data is deleted')
-        }
-})
-
 postsRouter.post(
     '/',
     authGuardMiddleware,
@@ -61,9 +51,9 @@ postsRouter.post(
         content: string,
         blogId: string
     }>, res:Response)=> {
-        let errors: ErrorType = {
-            errorsMessages: []
-        }
+        // let errors: ErrorType = {
+        //     errorsMessages: []
+        // }
 
         let { title, shortDescription, content, blogId} = req.body
 
@@ -93,9 +83,9 @@ postsRouter.put(
         content: string,
         blogId: string
     }>, res: Response) => {
-        let errors: ErrorType = {
-            errorsMessages: []
-        }
+        // let errors: ErrorType = {
+        //     errorsMessages: []
+        // }
 
         const id = req.params.id
         let { title, shortDescription, content, blogId} = req.body

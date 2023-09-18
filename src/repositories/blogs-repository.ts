@@ -32,10 +32,6 @@ export const blogsRepository = {
         blogDb.splice(indexOfDeletedBlog , 1)
         return true
     },
-    deleteAll(){
-        blogDb = []
-        return true
-    },
     updateBlogById(id: string, name: string, description: string, websiteUrl: string) {
         const indexOfUpdatedBlog = blogDb.findIndex(blog => blog.id === id)
         if(indexOfUpdatedBlog === -1) {
@@ -45,6 +41,21 @@ export const blogsRepository = {
         blogDb[indexOfUpdatedBlog].description = description
         blogDb[indexOfUpdatedBlog].websiteUrl = websiteUrl
 
+        return true
+    },
+    // updateBlogByIDTwo(id: string, name: string, description: string, websiteUrl: string) {
+    //     const foundBlog = this.findBlogById(id)
+    //     if(!foundBlog) {
+    //         return false
+    //     }
+    //     foundBlog.name = name
+    //     foundBlog.description = description
+    //     foundBlog.websiteUrl = websiteUrl
+    //
+    //     return true
+    // }
+    deleteAllBlogs() {
+        blogDb = []
         return true
     }
 }

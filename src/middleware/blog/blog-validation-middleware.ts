@@ -6,20 +6,20 @@ export const validateBlog = (): ValidationChain[] => {
     return [
         body('name')
             .notEmpty()
-            .trim()
             .isString()
+            .trim()
             .isLength({min:1, max: 15})
             .withMessage({message: 'Invalid Name', field: 'name'}),
 
         body('description')
-            .trim()
             .isString()
+            .trim()
             .isLength({min: 1, max: 15})
             .withMessage({message: 'Invalid description', field: 'description'}),
 
         body('websiteUrl')
-            .trim()
             .isString()
+            .trim()
             .isLength({ min: 1, max: 40 })
             .matches(/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/)
             .withMessage({message: 'Invalid websiteUrl', field: 'websiteUrl'}),

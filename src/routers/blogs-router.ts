@@ -1,6 +1,6 @@
 import {Request, Response, Router} from "express"
 import {RequestWithParams, RequestWithBody} from "../types/requests"
-import {ErrorType} from "../types/errors"
+// import {ErrorType} from "../types/errors"
 import {HTTP_STATUSES} from "../types/statutes"
 import {blogsRepository, BlogType} from "../repositories/blogs-repository"
 import {authGuardMiddleware} from "../middleware/authGuardMiddleware"
@@ -45,16 +45,6 @@ blogsRouter.delete(
     res.status(HTTP_STATUSES.no_content_204).send('No content')
 })
 
-blogsRouter.delete(
-    '/testing/all-date',
-    authGuardMiddleware,
-    (req: Request, res:Response) =>{
-        const deleteAllBlogs = blogsRepository.deleteAll()
-        if(deleteAllBlogs) {
-            res.status(HTTP_STATUSES.no_content_204).send('All data is deleted')
-        }
-})
-
 blogsRouter.post(
     '/',
     authGuardMiddleware,
@@ -65,9 +55,9 @@ blogsRouter.post(
         description: string,
         websiteUrl: string
 }>, res: Response) =>{
-    let errors: ErrorType ={
-        errorsMessages: []
-    }
+    // let errors: ErrorType ={
+    //     errorsMessages: []
+    // }
     let { name, description, websiteUrl } = req.body
 
     const newBlog: BlogType = {
@@ -94,9 +84,9 @@ blogsRouter.put(
         websiteUrl: "https://DVRQ.16BihhBPyLWyxzJ1FYlwvXwIzP5vWKoBXgsHD8U6T0MxOfFITrUTaKXoxwKAbvaJUWEqy2tqA4w1Zm5uwoV8UGn"
     }>,
     res: Response) =>{
-    let errors: ErrorType = {
-        errorsMessages: []
-    }
+    // let errors: ErrorType = {
+    //     errorsMessages: []
+    // }
 
     const id = req.params.id
     let {name, description, websiteUrl} = req.body

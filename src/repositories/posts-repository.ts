@@ -37,10 +37,6 @@ export const postsRepository = {
         postDb.splice(indexOfDeletePost, 1)
         return true
     },
-    deleteAll(){
-        postDb.length = 0
-        return true
-    },
     createPost(newPost:PostType) {
         return postDb.push(newPost)
     },
@@ -54,6 +50,10 @@ export const postsRepository = {
         postDb[blogIndex].content = content
         postDb[blogIndex].blogId = blogId
 
+        return true
+    },
+    deleteAllPosts() {
+        postDb = []
         return true
     }
 }
