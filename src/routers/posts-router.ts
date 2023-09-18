@@ -90,10 +90,6 @@ postsRouter.put(
         const id = req.params.id
         let { title, shortDescription, content, blogId} = req.body
 
-        const data = {
-            id, title, shortDescription, content, blogId
-        }
-
         const updatePost = postsRepository.updatePostById(id, title, shortDescription, content, blogId)
 
         if(!updatePost) {
