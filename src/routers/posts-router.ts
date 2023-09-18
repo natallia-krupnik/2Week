@@ -5,6 +5,7 @@ import {postsRepository} from "../repositories/posts-repository";
 import {authGuardMiddleware} from "../middleware/authGuardMiddleware";
 import {ValidatePost} from "../middleware/post/post-validation-middleware";
 import {ErrorsValidation} from "../middleware/errorsValidation";
+import {blogsRepository} from "../repositories/blogs-repository";
 
 export const postsRouter = Router({})
 
@@ -59,17 +60,20 @@ postsRouter.post(
 
         let { title, shortDescription, content, blogId} = req.body
 
+        const blog = blogsRepository.findBlogById(blogId)
+        if(!blog) return res.sendStatus(400)
+
         const newPost = {
             id: (Math.random()).toString(),
             title,
             shortDescription,
             content,
             blogId,
-            blogName: 'This ist mein Blog'
+            blogName: blog.name
         }
 
         const newCreatedPost = postsRepository.createPost(newPost)
-        res.status(HTTP_STATUSES.created_201).send(newCreatedPost)
+        return res.status(HTTP_STATUSES.created_201).send(newCreatedPost)
 })
 
 postsRouter.put(

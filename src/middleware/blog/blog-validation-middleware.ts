@@ -13,15 +13,15 @@ export const ValidateBlog = () => {
             .notEmpty()
             .isString()
             .trim()
-            .isLength({min: 1, max: 15})
+            .isLength({min: 1, max: 500})
             .withMessage('Invalid description'),
 
         body('websiteUrl')
             .notEmpty()
             .isString()
             .trim()
-            .isLength({ min: 1, max: 40 })
-            .matches(/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+(\/[a-zA-Z0-9_-]+)*\/?$/)
+            .isLength({ min: 1, max: 100 })
+            .isURL()
             .withMessage( 'Invalid websiteUrl'),
     ]
 }
