@@ -8,7 +8,7 @@ export const deleteAllRouter = Router({})
 
 deleteAllRouter.delete(
     '/testing/all-date',
-    authGuardMiddleware,
+
     (req: Request, res:Response) =>{
         postsRepository.deleteAllPosts()
         blogsRepository.deleteAllBlogs()

@@ -17,7 +17,7 @@ blogsRouter.get(
 
 blogsRouter.get(
     '/:id',
-    authGuardMiddleware,
+
     (req: RequestWithParams<{ id: string }>, res: Response) => {
     const id = req.params.id
     const blogByID = blogsRepository.findBlogById(id)
