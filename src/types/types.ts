@@ -7,6 +7,13 @@ export type PostType = {
     blogName: string
 }
 
+export type CreatePostType = {
+    title: string,
+    shortDescription: string,
+    content: string,
+    blogId: string,
+}
+
 export type BlogType = {
     id: string
     name: string

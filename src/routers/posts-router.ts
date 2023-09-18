@@ -58,21 +58,21 @@ postsRouter.post(
         blogId: string
     }>, res:Response)=> {
 
-        let { title, shortDescription, content, blogId} = req.body
+        //let { title, shortDescription, content, blogId} = req.body
 
-        const blog = blogsRepository.findBlogById(blogId)
-        if(!blog) return res.sendStatus(400)
+        // const blog = blogsRepository.findBlogById(blogId)
+        // if(!blog) return res.sendStatus(400)
+        //
+        // const newPost = {
+        //     id: (Math.random()).toString(),
+        //     title,
+        //     shortDescription,
+        //     content,
+        //     blogId,
+        //     blogName: blog.name
+        // }
 
-        const newPost = {
-            id: (Math.random()).toString(),
-            title,
-            shortDescription,
-            content,
-            blogId,
-            blogName: blog.name
-        }
-
-        const newCreatedPost = postsRepository.createPost(newPost)
+        const newCreatedPost = postsRepository.createPost(req.body)
         return res.status(HTTP_STATUSES.created_201).send(newCreatedPost)
 })
 

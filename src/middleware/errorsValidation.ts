@@ -7,7 +7,7 @@ export const ErrorsValidation = (req: Request, res: Response, next: NextFunction
     if (!errors.isEmpty()) {
         const errorsMessages = errors
             .array({ onlyFirstError: true }).map(error => ErrorsFormatter(error))
-        res.status(HTTP_STATUSES.bad_request_400).send(errorsMessages);
+        res.status(HTTP_STATUSES.bad_request_400).send({errorsMessages});
         return
     }
     next()
