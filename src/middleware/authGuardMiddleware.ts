@@ -12,9 +12,13 @@ export const authGuardMiddleware = (req: Request, res:Response, next: NextFuncti
     }
 
     const splitHeader = authHeader.split(' ')[1]
-    const enCodedHeader = atob(splitHeader)
+    // const enCodedHeader = atob(splitHeader)
+    const enCodedHeader = Buffer.from(splitHeader, 'base64')
 
-    if(enCodedHeader !== expectedAuthHeader) {
+    // if(enCodedHeader !== expectedAuthHeader) {
+    //     res.sendStatus(HTTP_STATUSES.unauthorized_401)
+    // }
+    if(enCodedHeader.toString() !== expectedAuthHeader) {
         res.sendStatus(HTTP_STATUSES.unauthorized_401)
     }
     return next()

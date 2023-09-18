@@ -1,11 +1,11 @@
 import {Request, Response, Router} from "express"
 import {RequestWithParams, RequestWithBody} from "../types/requests"
-// import {ErrorType} from "../types/errors"
 import {HTTP_STATUSES} from "../types/statutes"
-import {blogsRepository, BlogType} from "../repositories/blogs-repository"
+import {blogsRepository} from "../repositories/blogs-repository"
 import {authGuardMiddleware} from "../middleware/authGuardMiddleware"
 import {ValidateBlog} from "../middleware/blog/blog-validation-middleware";
 import {ErrorsValidation} from "../middleware/errorsValidation";
+import {BlogType} from "../types/types";
 
 export const blogsRouter = Router({})
 
