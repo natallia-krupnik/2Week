@@ -4,7 +4,8 @@ import {RequestWithParams, RequestWithBody} from "../types/requests"
 import {HTTP_STATUSES} from "../types/statutes"
 import {blogsRepository, BlogType} from "../repositories/blogs-repository"
 import {authGuardMiddleware} from "../middleware/authGuardMiddleware"
-import {ErrorsBlogValidation, ValidateBlog} from "../middleware/blog/blog-validation-middleware";
+import {ValidateBlog} from "../middleware/blog/blog-validation-middleware";
+import {ErrorsValidation} from "../middleware/errorsValidation";
 
 export const blogsRouter = Router({})
 
@@ -49,7 +50,7 @@ blogsRouter.post(
     '/',
     authGuardMiddleware,
     ValidateBlog(),
-    ErrorsBlogValidation,
+    ErrorsValidation,
     (req: RequestWithBody<{
         name: string,
         description: string,
@@ -72,7 +73,7 @@ blogsRouter.put(
     '/:id',
     authGuardMiddleware,
     ValidateBlog(),
-    ErrorsBlogValidation,
+    ErrorsValidation,
     (req: RequestWithParams<{
         id:string
     }>

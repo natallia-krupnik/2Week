@@ -1,4 +1,4 @@
-import {HTTP_STATUSES} from "../types/statutes";
+import { PostType } from "../types/types";
 
 let postDb: PostType[] = [
     {
@@ -11,20 +11,11 @@ let postDb: PostType[] = [
     }
 ]
 
-export type PostType = {
-    id: string,
-    title: string,
-    shortDescription: string,
-    content: string,
-    blogId: string,
-    blogName: string
-}
-
 export const postsRepository = {
     getAllPosts() {
         return postDb
     },
-    findPostByID(id:string) {
+    findPostByID(id:string): PostType | undefined {
         const postById = postDb.find(post => post.id === id)
         return postById
     },
@@ -38,13 +29,15 @@ export const postsRepository = {
         return true
     },
     createPost(newPost:PostType) {
-        return postDb.push(newPost)
+        postDb.push(newPost)
     },
     updatePostById(id: string, title: string, shortDescription: string, content: string, blogId: string) {
         const blogIndex = postDb.findIndex(blog => blog.id === id)
+
         if(blogIndex === -1) {
             return false
         }
+
         postDb[blogIndex].title = title
         postDb[blogIndex].shortDescription = shortDescription
         postDb[blogIndex].content = content
@@ -52,4 +45,9 @@ export const postsRepository = {
 
         return true
     },
+    deleteAllPosts() {
+        postDb = []
+
+        return true
+    }
 }
