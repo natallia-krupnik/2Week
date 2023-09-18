@@ -4,7 +4,7 @@ import {HTTP_STATUSES} from "../types/statutes";
 import {postsRepository} from "../repositories/posts-repository";
 import {authGuardMiddleware} from "../middleware/authGuardMiddleware";
 import {ErrorType} from "../types/errors";
-import {errorsPostValidation, validatePost} from "../middleware/post/input-post-validation-middleware";
+import {errorsPostValidation, validatePost} from "../middleware/post/post-validation-middleware";
 
 export const postsRouter = Router({})
 
@@ -19,7 +19,7 @@ postsRouter.get(
     '/:id',
     (req: RequestWithParams<{ id: string }>, res: Response) => {
     const id = req.params.id
-    const post = postsRepository.getPostByID(id)
+    const post = postsRepository.findPostByID(id)
     if(!post) {
         res.status(HTTP_STATUSES.not_found_404).send('Not found')
         return

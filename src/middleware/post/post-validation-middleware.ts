@@ -7,8 +7,8 @@ export const validatePost = (): ValidationChain[] => {
         body('title')
             .notEmpty()
             .trim()
-            .isLength({min:1, max: 30})
             .isString()
+            .isLength({min:1, max: 30})
             .withMessage({message: 'Invalid Name', field: 'title'}),
 
         body('shortDescription')
@@ -26,20 +26,19 @@ export const validatePost = (): ValidationChain[] => {
             .withMessage({message: 'Invalid content', field: 'content'}),
 
         body('blogId')
+            .notEmpty()
             .trim()
             .isString()
             .withMessage({message: 'Invalid blogId', field: 'blogId'}),
     ]
 }
 
-export const errorsPostValidation = () => {
-    return (req: Request, res: Response, next: NextFunction) => {
-        const errors = validationResult(req).array({ onlyFirstError: true });
-        if (errors.length > 0) {
-            res.status(HTTP_STATUSES.bad_request_400).send(errors);
-            return
-        }
-        next()
-    };
+export const errorsPostValidation = (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req).array({ onlyFirstError: true });
+    if (errors.length > 0) {
+        res.status(HTTP_STATUSES.bad_request_400).send(errors);
+        return
+    }
+    next()
 }
 

@@ -1,4 +1,4 @@
-const blogDb: BlogType[] = [
+let blogDb: BlogType[] = [
     {
         id: "string",
         name: "string",
@@ -17,7 +17,7 @@ export const blogsRepository = {
     getAllBlogs() {
         return blogDb
     },
-    getBlogById(id: string){
+    findBlogById(id: string){
         const blog = blogDb.find((blog) => blog.id === id)
         return blog
     },
@@ -33,7 +33,7 @@ export const blogsRepository = {
         return true
     },
     deleteAll(){
-        blogDb.length= 0
+        blogDb = []
         return true
     },
     updateBlogById(id: string, name: string, description: string, websiteUrl: string) {

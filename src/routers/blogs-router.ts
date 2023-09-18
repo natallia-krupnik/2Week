@@ -4,7 +4,7 @@ import {ErrorType} from "../types/errors"
 import {HTTP_STATUSES} from "../types/statutes"
 import {blogsRepository, BlogType} from "../repositories/blogs-repository"
 import {authGuardMiddleware} from "../middleware/authGuardMiddleware"
-import {errorsBlogValidation, validateBlog} from "../middleware/blog/input-blog-validation-middleware";
+import {errorsBlogValidation, validateBlog} from "../middleware/blog/blog-validation-middleware";
 
 export const blogsRouter = Router({})
 
@@ -20,7 +20,7 @@ blogsRouter.get(
     authGuardMiddleware,
     (req: RequestWithParams<{ id: string }>, res: Response) => {
     const id = req.params.id
-    const blogByID = blogsRepository.getBlogById(id)
+    const blogByID = blogsRepository.findBlogById(id)
     if(!blogByID) {
         res.sendStatus(HTTP_STATUSES.not_found_404)
         return
@@ -101,9 +101,9 @@ blogsRouter.put(
     const id = req.params.id
     let {name, description, websiteUrl} = req.body
 
-    const updateBlog = blogsRepository.updateBlogById(id, name, description, websiteUrl)
+    const updatedBlog = blogsRepository.updateBlogById(id, name, description, websiteUrl)
 
-    if(!updateBlog) {
+    if(!updatedBlog) {
         res.status(HTTP_STATUSES.not_found_404).send('Not found')
         return
     }

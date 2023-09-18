@@ -24,7 +24,7 @@ export const postsRepository = {
     getAllPosts() {
         return postDb
     },
-    getPostByID(id:string) {
+    findPostByID(id:string) {
         const postById = postDb.find(post => post.id === id)
         return postById
     },

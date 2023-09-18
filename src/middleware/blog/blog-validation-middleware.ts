@@ -7,8 +7,8 @@ export const validateBlog = (): ValidationChain[] => {
         body('name')
             .notEmpty()
             .trim()
-            .isLength({min:1, max: 15})
             .isString()
+            .isLength({min:1, max: 15})
             .withMessage({message: 'Invalid Name', field: 'name'}),
 
         body('description')
@@ -26,14 +26,12 @@ export const validateBlog = (): ValidationChain[] => {
     ]
 }
 
-export const errorsBlogValidation = () => {
-    return (req: Request, res: Response, next: NextFunction) => {
-        const errors = validationResult(req).array({ onlyFirstError: true });
-        if (errors.length > 0) {
-            res.status(HTTP_STATUSES.bad_request_400).send(errors);
-            return
-        }
-        next()
-    };
+export const errorsBlogValidation = (req: Request, res: Response, next: NextFunction) => {
+    const errors = validationResult(req).array({ onlyFirstError: true });
+    if (errors.length > 0) {
+        res.status(HTTP_STATUSES.bad_request_400).send(errors);
+        return
+    }
+    next()
 }
 
