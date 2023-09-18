@@ -2,7 +2,7 @@ import {body, param, validationResult, ValidationChain} from "express-validator"
 import {HTTP_STATUSES} from "../../types/statutes";
 import {NextFunction, Request, Response} from "express";
 
-export const validateBlog = (): ValidationChain[] => {
+export const validateBlog = () => {
     return [
         body('name')
             .notEmpty()

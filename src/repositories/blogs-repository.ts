@@ -22,7 +22,8 @@ export const blogsRepository = {
         return blog
     },
     createBlog(newBlog: BlogType) {
-        return blogDb.push(newBlog)
+        blogDb.push(newBlog)
+        return newBlog;
     },
     deleteBlogById(id: string) {
         const indexOfDeletedBlog  = blogDb.findIndex(blog => blog.id === id)

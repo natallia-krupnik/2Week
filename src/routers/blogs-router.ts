@@ -48,16 +48,14 @@ blogsRouter.delete(
 blogsRouter.post(
     '/',
     authGuardMiddleware,
-    validateBlog,
+    validateBlog(),
     errorsBlogValidation,
     (req: RequestWithBody<{
         name: string,
         description: string,
         websiteUrl: string
 }>, res: Response) =>{
-    // let errors: ErrorType ={
-    //     errorsMessages: []
-    // }
+
     let { name, description, websiteUrl } = req.body
 
     const newBlog: BlogType = {
@@ -67,13 +65,13 @@ blogsRouter.post(
         websiteUrl,
     }
     const newCreatedBlog = blogsRepository.createBlog(newBlog)
-    res.status(HTTP_STATUSES.created_201).send(newCreatedBlog)
+    return res.status(HTTP_STATUSES.created_201).send(newCreatedBlog)
 })
 
 blogsRouter.put(
     '/:id',
     authGuardMiddleware,
-    validateBlog,
+    validateBlog(),
     errorsBlogValidation,
     (req: RequestWithParams<{
         id:string
@@ -84,9 +82,6 @@ blogsRouter.put(
         websiteUrl: "https://DVRQ.16BihhBPyLWyxzJ1FYlwvXwIzP5vWKoBXgsHD8U6T0MxOfFITrUTaKXoxwKAbvaJUWEqy2tqA4w1Zm5uwoV8UGn"
     }>,
     res: Response) =>{
-    // let errors: ErrorType = {
-    //     errorsMessages: []
-    // }
 
     const id = req.params.id
     let {name, description, websiteUrl} = req.body

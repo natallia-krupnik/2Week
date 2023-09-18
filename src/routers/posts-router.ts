@@ -43,7 +43,7 @@ postsRouter.delete(
 postsRouter.post(
     '/',
     authGuardMiddleware,
-    validatePost,
+    validatePost(),
     errorsPostValidation,
     (req:RequestWithBody<{
         title: string,
@@ -51,9 +51,6 @@ postsRouter.post(
         content: string,
         blogId: string
     }>, res:Response)=> {
-        // let errors: ErrorType = {
-        //     errorsMessages: []
-        // }
 
         let { title, shortDescription, content, blogId} = req.body
 
@@ -72,7 +69,7 @@ postsRouter.post(
 postsRouter.put(
     '/:id',
     authGuardMiddleware,
-    validatePost,
+    validatePost(),
     errorsPostValidation,
     (req: RequestWithParams<{
         id: string
@@ -83,9 +80,6 @@ postsRouter.put(
         content: string,
         blogId: string
     }>, res: Response) => {
-        // let errors: ErrorType = {
-        //     errorsMessages: []
-        // }
 
         const id = req.params.id
         let { title, shortDescription, content, blogId} = req.body
