@@ -2,20 +2,11 @@ import {NextFunction, Request, Response} from "express";
 import {ValidationError, validationResult} from "express-validator";
 import {HTTP_STATUSES} from "../types/statutes";
 
-// export const ErrorsValidation = (req: Request, res: Response, next: NextFunction) => {
-//     const errors = validationResult(req);
-//     if (!errors.isEmpty()) {
-//         const errorsMessages = errors.array({ onlyFirstError: true }).map(error => ErrorsFormatter)
-//         res.status(HTTP_STATUSES.bad_request_400).send(errorsMessages);
-//         return
-//     }
-//     next()
-// }
 export const ErrorsValidation = (req: Request, res: Response, next: NextFunction) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        const errorsMessages = errors.array({ onlyFirstError: true }).map(error => ErrorsFormatter(error))
-        res.status(HTTP_STATUSES.bad_request_400).json({errorsMessages});
+        const errorsMessages = errors.array({ onlyFirstError: true }).map(error => ErrorsFormatter)
+        res.status(HTTP_STATUSES.bad_request_400).send(errorsMessages);
         return
     }
     next()
