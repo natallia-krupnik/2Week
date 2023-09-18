@@ -70,7 +70,7 @@ postsRouter.post(
 })
 
 postsRouter.put(
-    '/id',
+    '/:id',
     authGuardMiddleware,
     validatePost,
     errorsPostValidation,

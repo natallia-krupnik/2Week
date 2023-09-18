@@ -7,10 +7,10 @@ import {blogsRepository} from "../repositories/blogs-repository";
 export const deleteAllRouter = Router({})
 
 deleteAllRouter.delete(
-    '/testing/all-date',
+    '/',
 
     (req: Request, res:Response) =>{
         postsRepository.deleteAllPosts()
         blogsRepository.deleteAllBlogs()
-        res.sendStatus(HTTP_STATUSES.no_content_204)
+        return res.sendStatus(HTTP_STATUSES.no_content_204)
     })

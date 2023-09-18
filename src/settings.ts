@@ -8,7 +8,7 @@ export const  app = express()
 app.use(express.json())
 
 app.use('/blogs', blogsRouter)
-app.use('/blog', postsRouter)
+app.use('/posts', postsRouter)
 app.use('/testing/all-data', deleteAllRouter)
 
 
