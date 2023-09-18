@@ -4,7 +4,7 @@ import {RequestWithParams, RequestWithBody} from "../types/requests"
 import {HTTP_STATUSES} from "../types/statutes"
 import {blogsRepository, BlogType} from "../repositories/blogs-repository"
 import {authGuardMiddleware} from "../middleware/authGuardMiddleware"
-import {errorsBlogValidation, validateBlog} from "../middleware/blog/blog-validation-middleware";
+import {ErrorsBlogValidation, ValidateBlog} from "../middleware/blog/blog-validation-middleware";
 
 export const blogsRouter = Router({})
 
@@ -38,7 +38,7 @@ blogsRouter.delete(
     const blogIsDeleted = blogsRepository.deleteBlogById(id)
 
     if(!blogIsDeleted) {
-        res.status(HTTP_STATUSES.unauthorized_401).send('Not Found')
+        res.status(HTTP_STATUSES.not_found_404).send('Not Found')
         return
     }
 
@@ -48,8 +48,8 @@ blogsRouter.delete(
 blogsRouter.post(
     '/',
     authGuardMiddleware,
-    validateBlog(),
-    errorsBlogValidation,
+    ValidateBlog(),
+    ErrorsBlogValidation,
     (req: RequestWithBody<{
         name: string,
         description: string,
@@ -71,8 +71,8 @@ blogsRouter.post(
 blogsRouter.put(
     '/:id',
     authGuardMiddleware,
-    validateBlog(),
-    errorsBlogValidation,
+    ValidateBlog(),
+    ErrorsBlogValidation,
     (req: RequestWithParams<{
         id:string
     }>

@@ -52,8 +52,4 @@ export const postsRepository = {
 
         return true
     },
-    deleteAllPosts() {
-        postDb = []
-        return true
-    }
 }

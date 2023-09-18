@@ -4,7 +4,7 @@ import {HTTP_STATUSES} from "../types/statutes";
 import {postsRepository} from "../repositories/posts-repository";
 import {authGuardMiddleware} from "../middleware/authGuardMiddleware";
 // import {ErrorType} from "../types/errors";
-import {errorsPostValidation, validatePost} from "../middleware/post/post-validation-middleware";
+import {ErrorsPostValidation, ValidatePost} from "../middleware/post/post-validation-middleware";
 
 export const postsRouter = Router({})
 
@@ -43,8 +43,8 @@ postsRouter.delete(
 postsRouter.post(
     '/',
     authGuardMiddleware,
-    validatePost(),
-    errorsPostValidation,
+    ValidatePost(),
+    ErrorsPostValidation,
     (req:RequestWithBody<{
         title: string,
         shortDescription: string,
@@ -69,8 +69,8 @@ postsRouter.post(
 postsRouter.put(
     '/:id',
     authGuardMiddleware,
-    validatePost(),
-    errorsPostValidation,
+    ValidatePost(),
+    ErrorsPostValidation,
     (req: RequestWithParams<{
         id: string
     }>
