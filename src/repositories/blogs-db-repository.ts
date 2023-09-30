@@ -26,9 +26,9 @@ export const blogsRepository = {
             createdAt: new Date().toISOString(),
             isMembership: false
         }
-        const insertedNewBlog = await dbCollectionBlog.insertOne(newBlog)
+        const { insertedId } = await dbCollectionBlog.insertOne(newBlog)
         //console.log(insertedNewBlog)
-        return {...newBlog, _id: insertedNewBlog.insertedId.toString()}
+        return {...newBlog, _id: insertedId.toString()}
     },
 
     async updateBlogById(id: string, name: string, description: string, websiteUrl: string) {
@@ -45,7 +45,7 @@ export const blogsRepository = {
             }
         }
 
-        const result = await dbCollectionBlog.updateOne({ id: id }, updateField)
+        const result = await dbCollectionBlog.updateOne({ _id: new ObjectId(id) }, updateField)
 
         return result.matchedCount === 1
     },
