@@ -28,7 +28,7 @@ export const blogsRepository = {
         }
         const insertedNewBlog = await dbCollectionBlog.insertOne(newBlog)
         //console.log(insertedNewBlog)
-        return {...newBlog, _id: insertedNewBlog.insertedId}
+        return {...newBlog, _id: insertedNewBlog.insertedId.toString()}
     },
 
     async updateBlogById(id: string, name: string, description: string, websiteUrl: string) {
