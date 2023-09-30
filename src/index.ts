@@ -1,10 +1,19 @@
 import{ app } from "./settings"
-import {randomUUID} from "crypto";
+import {runDb} from "./db/db";
 
-const port = 3001
+const port = process.env.PORT || 3001
 
-app.listen(port, (): void => {
-    console.log(`App started on ${port} port`)
-})
+//app.listen(port, (): void => {
+ //   console.log(`App started on ${port} port`)
+//})
+
+const startApp = async () => {
+    await runDb()
+    app.listen(port, (): void => {
+        console.log(`App started on ${port} port`)
+    })
+}
+
+startApp()
 
 export { app }

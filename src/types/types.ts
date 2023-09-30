@@ -1,10 +1,10 @@
 export type PostType = {
-    id: string,
     title: string,
     shortDescription: string,
     content: string,
     blogId: string,
-    blogName: string
+    blogName: string,
+    createdAt: string
 }
 
 export type CreatePostType = {
@@ -15,8 +15,17 @@ export type CreatePostType = {
 }
 
 export type BlogType = {
-    id: string
     name: string
     description: string
     websiteUrl: string
+    createdAt: string
+    isMembership: boolean
+}
+export type CreateBlogType = Omit<BlogType, 'id'>
+
+export type CreateInputData = {
+    title: string,
+    shortDescription: string,
+    content: string,
+    blogId: string
 }

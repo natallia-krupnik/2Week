@@ -1,28 +1,30 @@
 import {Request, Response, Router} from "express"
 import {RequestWithParams, RequestWithBody} from "../types/requests"
 import {HTTP_STATUSES} from "../types/statutes"
-import {blogsRepository} from "../repositories/blogs-repository"
+import {blogsRepository} from "../repositories/blogs-db-repository"
 import {authGuardMiddleware} from "../middleware/authGuardMiddleware"
 import {ValidateBlog} from "../middleware/blog/blog-validation-middleware";
 import {ErrorsValidation} from "../middleware/errorsValidation";
-import {BlogType} from "../types/types";
-import {randomUUID} from "crypto";
+import {ObjectId} from "mongodb";
 
 export const blogsRouter = Router({})
 
 blogsRouter.get(
     '/',
-    (req: Request, res: Response) => {
-    const allBlogs = blogsRepository.getAllBlogs()
+    async (req: Request, res: Response) => {
+    const allBlogs = await blogsRepository.getAllBlogs()
     res.status(HTTP_STATUSES.ok_200).send(allBlogs)
 })
 
 blogsRouter.get(
     '/:id',
-
-    (req: RequestWithParams<{ id: string }>, res: Response) => {
-    const id = req.params.id
-    const blogByID = blogsRepository.findBlogById(id)
+    async (req: RequestWithParams<{ id: string }>, res: Response) => {
+        // const isIdValid = ObjectId.isValid(req.params.id)
+        // if (!isIdValid) {
+        //     res.sendStatus(HTTP_STATUSES.not_found_404)
+        //     return
+        // }
+    const blogByID = await blogsRepository.findBlogById(req.params.id)
     if(!blogByID) {
         res.sendStatus(HTTP_STATUSES.not_found_404)
         return
@@ -33,11 +35,11 @@ blogsRouter.get(
 blogsRouter.delete(
     '/:id',
     authGuardMiddleware,
-    (req:RequestWithParams<{ id:string }>, res:Response) =>{
+    async (req:RequestWithParams<{ id:string }>, res:Response) =>{
 
     const id = req.params.id
 
-    const blogIsDeleted = blogsRepository.deleteBlogById(id)
+    const blogIsDeleted = await blogsRepository.deleteBlogById(id)
 
     if(!blogIsDeleted) {
         res.status(HTTP_STATUSES.not_found_404).send('Not Found')
@@ -52,21 +54,13 @@ blogsRouter.post(
     authGuardMiddleware,
     ValidateBlog(),
     ErrorsValidation,
-    (req: RequestWithBody<{
+    async (req: RequestWithBody<{
         name: string,
         description: string,
         websiteUrl: string
 }>, res: Response) =>{
 
-    let { name, description, websiteUrl } = req.body
-
-    const newBlog: BlogType = {
-        id: randomUUID(),
-        name,
-        description,
-        websiteUrl,
-    }
-    const newCreatedBlog = blogsRepository.createBlog(newBlog)
+    const newCreatedBlog = await blogsRepository.createBlog(req.body)
     return res.status(HTTP_STATUSES.created_201).send(newCreatedBlog)
 })
 
@@ -95,5 +89,5 @@ blogsRouter.put(
         return
     }
 
-    res.status(HTTP_STATUSES.no_content_204).send('No Content')
+    return res.status(HTTP_STATUSES.no_content_204).send('No Content')
 })
