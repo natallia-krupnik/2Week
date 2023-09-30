@@ -1,5 +1,6 @@
-import {BlogType} from "../types/types";
+import {BlogType, CreateBlogType, PostType} from "../types/types";
 import {ObjectId} from "mongodb";
+import {randomUUID} from "crypto";
 import {dbCollectionBlog} from "../db/db";
 
 export const blogsRepository = {
@@ -26,7 +27,9 @@ export const blogsRepository = {
             createdAt: new Date().toISOString(),
             isMembership: false
         }
-        return await dbCollectionBlog.insertOne(newBlog)
+        const insertedNewBlog = await dbCollectionBlog.insertOne(newBlog)
+        //console.log(insertedNewBlog)
+        return {...newBlog, insertedNewBlog}
     },
 
     async updateBlogById(id: string, name: string, description: string, websiteUrl: string) {
