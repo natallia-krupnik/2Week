@@ -17,6 +17,7 @@ export type CreatePostType = {
 }
 
 export type BlogType = {
+    id: string,
     _id?: ObjectId,
     name: string
     description: string

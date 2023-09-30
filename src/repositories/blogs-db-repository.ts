@@ -10,8 +10,12 @@ export const blogsRepository = {
         })
     },
 
-    findBlogById (id: string): Promise<BlogType | null> {
-        return dbCollectionBlog.findOne({_id: new ObjectId(id)})
+    async findBlogById (id: string): Promise<BlogType | null> {
+        const blogId = await dbCollectionBlog.findOne({_id: new ObjectId(id)})
+        if(blogId) {
+            return {...blogId, id: blogId._id.toString()}
+        }
+        return null
     },
 
     async deleteBlogById (id: string) {
