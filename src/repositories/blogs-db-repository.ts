@@ -3,8 +3,11 @@ import {ObjectId} from "mongodb";
 import {dbCollectionBlog} from "../db/db";
 
 export const blogsRepository = {
-    getAllBlogs () {
-        return dbCollectionBlog.find({}).toArray()
+    async getAllBlogs () {
+        const blogs = await dbCollectionBlog.find({}).toArray()
+        return blogs.map((blog) => {
+            return {...blog, id: blog._id.toString()}
+        })
     },
 
     findBlogById (id: string): Promise<BlogType | null> {
@@ -28,7 +31,7 @@ export const blogsRepository = {
         }
         const { insertedId } = await dbCollectionBlog.insertOne(newBlog)
         //console.log(insertedNewBlog)
-        return {...newBlog, _id: insertedId.toString()}
+        return {...newBlog, id: insertedId.toString()}
     },
 
     async updateBlogById(id: string, name: string, description: string, websiteUrl: string) {
