@@ -54,7 +54,7 @@ postsRouter.post(
     ErrorsValidation,
     async (req: RequestWithBody<CreateInputData>, res: Response) => {
         const blog = await blogsRepository.findBlogById(req.body.blogId);
-        if(!blog) return res.sendStatus(404)
+        if(!blog) return res.sendStatus(HTTP_STATUSES.not_found_404)
 
         const newCreatedPost = await postsRepository.createPost({...req.body, blogName: blog.name})
         return res.status(HTTP_STATUSES.created_201).send(newCreatedPost)

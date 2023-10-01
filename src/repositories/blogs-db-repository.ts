@@ -4,10 +4,11 @@ import {dbCollectionBlog} from "../db/db";
 
 export const blogsRepository = {
     async getAllBlogs () {
-        const blogs = await dbCollectionBlog.find({}).toArray()
-        return blogs.map((blog) => {
-            return {...blog, id: blog._id.toString()}
-        })
+        return await dbCollectionBlog.find({}, {projection: {_id: 0}}).toArray()
+        // const blogs = await dbCollectionBlog.find({}).toArray()
+        // return blogs.map((blog) => {
+        //     return {...blog, id: blog._id.toString()}
+        // })
     },
 
     async findBlogById (id: string): Promise<BlogType | null> {

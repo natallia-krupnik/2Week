@@ -119,32 +119,39 @@ describe('/posts', () => {
             })
             .expect(HTTP_STATUSES.no_content_204)
 
-        // expect(updatedPost.body).toEqual({
-        //     _id: expect.any(String),
-        //     title: 'New good title',
-        //     shortDescription: 'the best Post',
-        //     content: 'super',
-        //     blogId: blog._id,
-        //     blogName: blog.name,
-        //     createdAt: expect.any(String)
-        // })
+        expect(updatedPost.body).toEqual({
+            _id: expect.any(String),
+            title: 'New good title',
+            shortDescription: 'the best Post',
+            content: 'super',
+            blogId: blog._id,
+            blogName: blog.name,
+            createdAt: expect.any(String)
+        })
     })
 
     it(`shouldn't update post with incorrect input data`, async ()=> {
-        await request(app)
-            .put(`/posts/${post._id}`)
+
+        const notStringData = await request(app)
+            .put(`/posts/${post.body._id}`)
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
             .send({title: ''})
             .expect(HTTP_STATUSES.bad_request_400)
 
-        await request(app)
-            .get(`/posts/${post._id}`)
-            .expect(HTTP_STATUSES.ok_200, post)
+        expect(notStringData.body).toEqual({
+            errorsMessages: [
+                {
+                    message: expect.any(String),
+                    field: 'title'
+                }
+            ]
+        })
     })
 
     it(`shouldn't update post that not exist`, async ()=> {
+        const invalidId = '000000000000000000000000'
         await request(app)
-            .put(`/posts/${post.id}`)
+            .put(`/posts/${invalidId}`)
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
             .send({title: 'I am gut'})
             .expect(HTTP_STATUSES.not_found_404)
