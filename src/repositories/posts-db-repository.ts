@@ -41,9 +41,9 @@ export const postsRepository = {
             blogName,
             createdAt: new Date().toISOString()
         }
-        const res = await dbCollectionPost.insertOne({...newPost})
+        const res = await dbCollectionPost.insertOne(newPost)
         delete newPost._id
-        return {...newPost, _id: res.insertedId}
+        return {...newPost, _id: res.insertedId.toString()}
     },
 
     async updatePostById(id: string, title: string, shortDescription: string, content: string, blogId: string) {
