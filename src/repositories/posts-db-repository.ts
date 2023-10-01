@@ -1,4 +1,4 @@
-import {CreateInputData, CreatePostType, PostType} from "../types/types";
+import {CreateInputData, CreatePostType, PostType, PostTypeWithId} from "../types/types";
 import { randomUUID } from "crypto";
 import {dbCollectionBlog, dbCollectionPost} from "../db/db";
 import { ObjectId } from "mongodb";
@@ -6,23 +6,34 @@ import { ObjectId } from "mongodb";
 
 
 export const postsRepository = {
-    getAllPosts () {
-        return dbCollectionPost.find({}).toArray()
+    async getAllPosts () {
+        const posts = await dbCollectionPost.find({}, {projection: {_id: 0}}).toArray()
+        return posts.map((post) => {
+            return  {...post, id: post._id.toString()}
+        })
     },
 
-    findPostByID (id: string): Promise<PostType | null> {
-        return dbCollectionPost.findOne({_id: new ObjectId(id)})
+    async findPostByID (id: string): Promise<PostType | null> {
+        const postId = await dbCollectionPost.findOne({_id: new ObjectId(id)})
+
+        if(postId) {
+            const {_id, ...rest} = postId
+            return {...rest, id: postId._id.toString()}
+        }
     },
 
     async deletePostById (id: string) : Promise<boolean> {
         const result = await dbCollectionPost.deleteOne({_id: new ObjectId(id)})
-        return result.deletedCount === 1
-    },
-//todo types with id
+
+        if (result.deletedCount === 0) {
+            return false
+        }
+        return true    },
+
     async createPost (inputData: CreateInputData & {blogName: string}): Promise<any> {
         const {title, shortDescription, content, blogName,blogId} = inputData
 
-        const newPost: PostType = {
+        const newPost: PostTypeWithId = {
             title,
             shortDescription,
             content,
@@ -31,7 +42,7 @@ export const postsRepository = {
             createdAt: new Date().toISOString()
         }
         const res = await dbCollectionPost.insertOne({...newPost})
-
+        delete newPost._id
         return {...newPost, _id: res.insertedId}
     },
 

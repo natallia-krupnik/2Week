@@ -5,7 +5,6 @@ import {dbCollectionBlog} from "../db/db";
 export const blogsRepository = {
     async getAllBlogs () {
         const blogs = await dbCollectionBlog.find({}, {projection: {_id: 0}}).toArray()
-        // const blogs = await dbCollectionBlog.find({}).toArray()
         return blogs.map((blog) => {
             return {...blog, id: blog._id.toString()}
         })
@@ -23,7 +22,7 @@ export const blogsRepository = {
 
     async deleteBlogById (id: string) {
         const result = await dbCollectionBlog.deleteOne({_id: new ObjectId(id)})
-        // return result.deletedCount !== 0;
+
         if (result.deletedCount === 0) {
             return false
         }
