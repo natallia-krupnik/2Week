@@ -40,50 +40,6 @@ describe('/posts', () => {
 
     afterAll((done)=> done())
 
-    it('should delete post by ID', async() => {
-        await request(app)
-            .delete(`/posts/${post.body._id}`)
-            .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
-            .expect(HTTP_STATUSES.no_content_204)
-
-        await request(app)
-            .get(`/posts/${post.body._id}`)
-            .expect(HTTP_STATUSES.not_found_404)
-    })
-
-    it(`shouldn't delete post by incorrect ID`, async() => {
-        await request(app)
-            .delete(`/posts/${post.body._id}`)
-            .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
-            .expect(HTTP_STATUSES.not_found_404)
-    })
-
-    it('should GET all posts', async ()=> {
-        postTwo = await request(app)
-            .post('/posts')
-            .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
-            .send({...createPostTwo(), blogId: blog._id})
-
-        const response = await request(app)
-            .get('/posts')
-
-        expect(response.status).toBe(200)
-        expect(response.body.length).toBe(1)
-    })
-
-    it('should GET posts by id', async () => {
-        const  response = await request(app)
-            .get(`/posts/${post.body._id}`)
-
-            expect(response.body._id).toBe(post._id)
-    })
-
-    it('should GET 404 for not existing post', () => {
-        request(app)
-            .get(`/posts/${post.id}`)
-            .expect(HTTP_STATUSES.not_found_404)
-    })
-
     it('should create one more post with correct input data', async () => {
         const createResponse = await request(app)
             .post('/posts')
@@ -121,35 +77,57 @@ describe('/posts', () => {
             .post('/posts')
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
             .send({
-                title: ''
+                title: '',
+                blogId: blog._id
             })
             .expect(HTTP_STATUSES.bad_request_400)
     })
 
+    //ich hat post, postTwo und 'one more post' z.43
+    it('should GET all posts', async ()=> {
+        postTwo = await request(app)
+            .post('/posts')
+            .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
+            .send({...createPostTwo(), blogId: blog._id})
+
+        const response = await request(app)
+            .get('/posts')
+
+        expect(response.status).toBe(200)
+        expect(response.body.length).toBe(3)
+    })
+
+    it('should GET posts by id', async () => {
+        const  response = await request(app)
+            .get(`/posts/${post.body._id}`)
+
+        expect(response.body._id).toBe(post.body._id)
+    })
+
+    it('should GET 404 for not existing post', () => {
+        request(app)
+            .get(`/posts/${post.id}`)
+            .expect(HTTP_STATUSES.not_found_404)
+    })
+
     it(`should update post with correct input data`, async ()=> {
         const updatedPost = await request(app)
-            .put(`/posts/${post._id}`)
+            .put(`/posts/${post.body._id}`)
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
-            .send({title: 'New good title'})
+            .send({
+                title: 'New good title',
+            })
+            .expect(HTTP_STATUSES.no_content_204)
 
-        expect(updatedPost.body).toEqual({
-            _id: expect.any(String),
-            title: 'New good title',
-            shortDescription: 'the best Post',
-            content: 'super',
-            blogId: blog._id,
-            blogName: blog.name,
-            createdAt: expect.any(String)
-        })
-            //.expect(HTTP_STATUSES.no_content_204)
-
-        // await request(app)
-        //     .get(`/posts/${post._id}`)
-        //     .expect(HTTP_STATUSES.ok_200, {
-        //         ...post,
-        //         title: 'New good title'
-        //     })
-        //
+        // expect(updatedPost.body).toEqual({
+        //     _id: expect.any(String),
+        //     title: 'New good title',
+        //     shortDescription: 'the best Post',
+        //     content: 'super',
+        //     blogId: blog._id,
+        //     blogName: blog.name,
+        //     createdAt: expect.any(String)
+        // })
     })
 
     it(`shouldn't update post with incorrect input data`, async ()=> {
@@ -169,6 +147,24 @@ describe('/posts', () => {
             .put(`/posts/${post.id}`)
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
             .send({title: 'I am gut'})
+            .expect(HTTP_STATUSES.not_found_404)
+    })
+
+    it('should delete post by ID', async() => {
+        await request(app)
+            .delete(`/posts/${post.body._id}`)
+            .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
+            .expect(HTTP_STATUSES.no_content_204)
+
+        await request(app)
+            .get(`/posts/${post.body._id}`)
+            .expect(HTTP_STATUSES.not_found_404)
+    })
+
+    it(`shouldn't delete post by incorrect ID`, async() => {
+        await request(app)
+            .delete(`/posts/${post.body._id}`)
+            .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
             .expect(HTTP_STATUSES.not_found_404)
     })
 })

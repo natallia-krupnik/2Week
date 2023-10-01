@@ -19,11 +19,11 @@ blogsRouter.get(
 blogsRouter.get(
     '/:id',
     async (req: RequestWithParams<{ id: string }>, res: Response) => {
-        // const isIdValid = ObjectId.isValid(req.params.id)
-        // if (!isIdValid) {
-        //     res.sendStatus(HTTP_STATUSES.not_found_404)
-        //     return
-        // }
+        const isIdValid = ObjectId.isValid(req.params.id)
+        if (!isIdValid) {
+            res.sendStatus(HTTP_STATUSES.not_found_404)
+            return
+        }
     const blogByID = await blogsRepository.findBlogById(req.params.id)
     if(!blogByID) {
         res.sendStatus(HTTP_STATUSES.not_found_404)
