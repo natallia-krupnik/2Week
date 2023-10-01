@@ -13,15 +13,21 @@ export const blogsRepository = {
 
     async findBlogById (id: string): Promise<BlogType | null> {
         const blogId = await dbCollectionBlog.findOne({_id: new ObjectId(id)})
+
         if(blogId) {
-            return {...blogId, id: blogId._id.toString()}
+            const {_id, ...rest} = blogId
+            return {...rest, id: blogId._id.toString()}
         }
         return null
     },
 
     async deleteBlogById (id: string) {
         const result = await dbCollectionBlog.deleteOne({_id: new ObjectId(id)})
-        return result.deletedCount === 1
+        // return result.deletedCount !== 0;
+        if (result.deletedCount === 0) {
+            return false
+        }
+        return true
     },
 
     async createBlog(inputData: { name: string; description: string; websiteUrl: string }) {
@@ -34,9 +40,9 @@ export const blogsRepository = {
             createdAt: new Date().toISOString(),
             isMembership: false
         }
-        const { insertedId } = await dbCollectionBlog.insertOne(newBlog)
-        //console.log(insertedNewBlog)
-        return {...newBlog, id: insertedId.toString()}
+        const result = await dbCollectionBlog.insertOne(newBlog)
+        delete newBlog._id
+        return {...newBlog, id: result.insertedId.toString()}
     },
 
     async updateBlogById(id: string, name: string, description: string, websiteUrl: string) {
