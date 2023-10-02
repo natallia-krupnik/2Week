@@ -10,7 +10,11 @@ export const blogsRepository = {
             return {
                 id: blog._id.toString(),
                 name: blog.name,
-                description: blog.description,} as BlogViewType
+                description: blog.description,
+                websiteUrl: blog.websiteUrl,
+                isMembership: blog.isMembership,
+                createdAt: blog.createdAt
+            }
         })
     },
 
