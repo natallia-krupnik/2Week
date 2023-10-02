@@ -169,11 +169,23 @@ describe('/posts', () => {
     })
 
     it(`shouldn't update post that not exist`, async ()=> {
+        // const invalidId = '111a11b1-11c1-1111-1111-d1e1ab11c111';
+        //
+        // const existingPost = await request(app)
+        //     .get(`/posts/${invalidId}`)
+        //     .expect(HTTP_STATUSES.not_found_404);
+        //
+        // if (existingPost.status === 404) {
+        //     expect(existingPost.body).toEqual({
+        //         message: 'Post not found',
+        //     });
+        // }
         const invalidId = '111a11b1-11c1-1111-1111-d1e1ab11c111'
-        await request(app)
+
+        const existingPost = await request(app)
             .put(`/posts/${invalidId}`)
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
-            .send({title: 'I am gut'})
+            .send({title: 'I am gut', blogId: blog.id})
             .expect(HTTP_STATUSES.not_found_404)
     })
 

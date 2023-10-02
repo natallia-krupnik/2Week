@@ -13,20 +13,22 @@ blogsRouter.get(
     '/',
     async (req: Request, res: Response) => {
     const allBlogs = await blogsRepository.getAllBlogs()
+
     res.status(HTTP_STATUSES.ok_200).send(allBlogs)
 })
 
 blogsRouter.get(
     '/:id',
     async (req: RequestWithParams<{ id: string }>, res: Response) => {
-        const isIdValid = ObjectId.isValid(req.params.id)
-        if (!isIdValid) {
-            res.sendStatus(HTTP_STATUSES.not_found_404)
-            return
-        }
+        // const isIdValid = ObjectId.isValid(req.params.id)
+        // if (!isIdValid) {
+        //     res.sendStatus(HTTP_STATUSES.not_found_404)
+        //     return
+        // }
     const blogByID = await blogsRepository.findBlogById(req.params.id)
+
     if(!blogByID) {
-        res.sendStatus(HTTP_STATUSES.not_found_404)
+        res.sendStatus(HTTP_STATUSES.not_found_404).send('Not found')
         return
     }
     res.status(HTTP_STATUSES.ok_200).send(blogByID)
@@ -36,11 +38,9 @@ blogsRouter.delete(
     '/:id',
     authGuardMiddleware,
     async (req:RequestWithParams<{ id:string }>, res:Response) =>{
-
     const id = req.params.id
-
-        const blog = await blogsRepository.findBlogById(id)
-        if(!blog) return res.sendStatus(404);
+    const blog = await blogsRepository.findBlogById(id)
+    if(!blog) return res.sendStatus(404);
 
     const blogIsDeleted = await blogsRepository.deleteBlogById(id)
 
