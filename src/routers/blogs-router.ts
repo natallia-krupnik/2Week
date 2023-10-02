@@ -39,8 +39,9 @@ blogsRouter.delete(
     authGuardMiddleware,
     async (req:RequestWithParams<{ id:string }>, res:Response) =>{
     const id = req.params.id
+
     const blog = await blogsRepository.findBlogById(id)
-    if(!blog) return res.sendStatus(404);
+    if(!blog) return res.sendStatus(404)
 
     const blogIsDeleted = await blogsRepository.deleteBlogById(id)
 

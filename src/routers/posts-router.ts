@@ -35,8 +35,12 @@ postsRouter.get(
 postsRouter.delete(
     '/:id',
     authGuardMiddleware,
-    async (req:Request<{id:string}>, res: Response) =>{
+    async (req:Request<{id:string}>, res: Response) => {
         const id = req.params.id
+
+        const post = await postsRepository.findPostByID(id)
+        if (!post) return res.sendStatus(404)
+
         const deletedPostById = await postsRepository.deletePostById(id)
 
         if(!deletedPostById) {
@@ -44,7 +48,7 @@ postsRouter.delete(
             return
         }
 
-        res.status(HTTP_STATUSES.no_content_204).send('No content')
+        return res.status(HTTP_STATUSES.no_content_204).send('No content')
 })
 
 postsRouter.post(

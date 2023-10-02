@@ -1,4 +1,4 @@
-import {CreateInputData, CreatePostType, PostType, PostTypeWithId} from "../types/types";
+import {CreateInputData, CreatePostType, PostDBType, PostViewType} from "../types/types";
 import { randomUUID } from "crypto";
 import {dbCollectionBlog, dbCollectionPost} from "../db/db";
 import { ObjectId } from "mongodb";
@@ -9,11 +9,12 @@ export const postsRepository = {
     async getAllPosts () {
         const posts = await dbCollectionPost.find({}).toArray()
         return posts.map((post) => {
-            return  {...post, id: post._id.toString()}
+            const {_id, ...rest} = post
+            return  {...rest, id: post._id.toString()}
         })
     },
 
-    async findPostByID (id: string): Promise<PostType | null> {
+    async findPostByID (id: string): Promise<PostViewType | null> {
         const post = await dbCollectionPost.findOne({_id: new ObjectId(id)})
 
         if(post) {
@@ -34,7 +35,8 @@ export const postsRepository = {
     async createPost (inputData: CreateInputData & {blogName: string}): Promise<any> {
         const {title, shortDescription, content, blogName,blogId} = inputData
 
-        const newPost: PostTypeWithId = {
+        const newPost: PostDBType = {
+            _id: new ObjectId(),
             title,
             shortDescription,
             content,
@@ -42,7 +44,7 @@ export const postsRepository = {
             blogName,
             createdAt: new Date().toISOString()
         }
-        const res = await dbCollectionPost.insertOne({...newPost})
+        const res = await dbCollectionPost.insertOne((newPost))
 
         return {...newPost, id: res.insertedId.toString()}
     },
