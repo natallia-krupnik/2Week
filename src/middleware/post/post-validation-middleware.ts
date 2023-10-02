@@ -25,13 +25,13 @@ export const ValidatePost = ()=> {
             .withMessage('Invalid content'),
 
         body('blogId')
-            .notEmpty()
             .isString()
             .trim()
-            .custom((value) => {
-                const blogIsExist = blogsRepository.findBlogById(value);
+            .notEmpty()
+            .custom(async (value) => {
+                const blogIsExist = await blogsRepository.findBlogById(value);
 
-                if(!blogIsExist){
+                if (!blogIsExist) {
                     throw new Error('Blog not exist')
                 }
 

@@ -4,9 +4,12 @@ import {dbCollectionBlog} from "../db/db";
 
 export const blogsRepository = {
     async getAllBlogs () {
-        const blogs = await dbCollectionBlog.find({}, {projection: {_id: 0}}).toArray()
+        const blogs = await dbCollectionBlog.find({}).toArray()
         return blogs.map((blog) => {
-            return {...blog, id: blog._id.toString()}
+            return {
+                id: blog._id.toString(),
+                name: blog.name,
+                description: blog.description,}
         })
     },
 
