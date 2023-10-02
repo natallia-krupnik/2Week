@@ -14,6 +14,9 @@ export const postsRepository = {
                 title: post.title,
                 shortDescription: post.shortDescription,
                 content: post.content,
+                blogId: post.blogId,
+                blogName: post.blogName,
+                createdAt: new Date().toISOString()
             }
         })
     },
@@ -72,7 +75,8 @@ export const postsRepository = {
                 title,
                 shortDescription,
                 content,
-                blogId
+                blogId,
+                createdAt: new Date().toISOString()
             }
         }
         const result = await dbCollectionPost.updateOne({ _id: new ObjectId(id) }, updateField)
