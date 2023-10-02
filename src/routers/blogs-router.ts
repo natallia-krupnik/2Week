@@ -6,6 +6,7 @@ import {authGuardMiddleware} from "../middleware/authGuardMiddleware"
 import {ValidateBlog} from "../middleware/blog/blog-validation-middleware";
 import {ErrorsValidation} from "../middleware/errorsValidation";
 import {ObjectId} from "mongodb";
+import {validateObjectId} from "../middleware/isValidObjectId";
 
 export const blogsRouter = Router({})
 
@@ -37,11 +38,12 @@ blogsRouter.get(
 blogsRouter.delete(
     '/:id',
     authGuardMiddleware,
+    validateObjectId,
     async (req:RequestWithParams<{ id:string }>, res:Response) =>{
     const id = req.params.id
 
     const blog = await blogsRepository.findBlogById(id)
-    if( !blog ) return res.status(HTTP_STATUSES.not_found_404)
+    if( !blog ) return res.status(HTTP_STATUSES.not_found_404).send()
 
     const blogIsDeleted = await blogsRepository.deleteBlogById(id)
 

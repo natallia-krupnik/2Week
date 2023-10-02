@@ -1,5 +1,5 @@
-import{ app } from "./settings"
 import {runDb} from "./db/db";
+import {app} from "./settings";
 
 const port = process.env.PORT || 4000
 
@@ -16,4 +16,3 @@ const startApp = async () => {
 
 startApp()
 
-export { app }
