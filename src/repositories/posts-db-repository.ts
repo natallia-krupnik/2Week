@@ -9,8 +9,12 @@ export const postsRepository = {
     async getAllPosts () {
         const posts = await dbCollectionPost.find({}).toArray()
         return posts.map((post) => {
-            const {_id, ...rest} = post
-            return  {...rest, id: post._id.toString()}
+            return {
+                id: post._id.toString(),
+                title: post.title,
+                shortDescription: post.shortDescription,
+                content: post.content,
+            }
         })
     },
 
@@ -50,6 +54,11 @@ export const postsRepository = {
     },
 
     async updatePostById(id: string, title: string, shortDescription: string, content: string, blogId: string) {
+        const post = await dbCollectionPost.findOne({_id: new ObjectId(id)})
+
+        if(!post) {
+            return null
+        }
         const updateField = {
             $set: {
                 title,
@@ -60,7 +69,7 @@ export const postsRepository = {
         }
         const result = await dbCollectionPost.updateOne({ _id: new ObjectId(id) }, updateField)
 
-        return result.matchedCount > 0
+        return result.matchedCount === 1
     },
 
     async deleteAllPosts () {
