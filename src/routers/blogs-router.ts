@@ -46,7 +46,7 @@ blogsRouter.delete(
         return
     }
 
-    res.status(HTTP_STATUSES.no_content_204).send('No content')
+    return res.status(HTTP_STATUSES.no_content_204).send('No content')
 })
 
 blogsRouter.post(

@@ -28,16 +28,24 @@ export type CreatePostType = {
     blogId: string,
 }
 
-export type BlogType = {
-    id?: string,
-    _id?: ObjectId,
+export type BlogViewType = {
+    id: string,
     name: string
     description: string
     websiteUrl: string
     createdAt: string
     isMembership: boolean
 }
-export type CreateBlogType = Omit<BlogType, 'id'>
+
+export type BlogDBType = {
+    _id: ObjectId,
+    name: string
+    description: string
+    websiteUrl: string
+    createdAt: string
+    isMembership: boolean
+}
+//export type CreateBlogType = Omit<BlogType, 'id'>
 
 export type CreateInputData = {
     title: string,

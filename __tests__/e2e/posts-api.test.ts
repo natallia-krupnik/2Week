@@ -4,7 +4,7 @@ import {HTTP_STATUSES} from "../../src/types/statutes";
 import {createBlog} from "../helpers/blog";
 import {createPost, createPostTwo} from "../helpers/post";
 import {response} from "express";
-import {BlogType} from "../../src/types/types";
+
 
 export type BlogViewType = {
     id: string,

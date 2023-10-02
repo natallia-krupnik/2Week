@@ -1,6 +1,7 @@
-import {BlogType} from "../types/types";
+import {BlogDBType} from "../types/types";
 import {ObjectId} from "mongodb";
 import {dbCollectionBlog} from "../db/db";
+import {BlogViewType} from "../../__tests__/e2e/posts-api.test";
 
 export const blogsRepository = {
     async getAllBlogs () {
@@ -9,11 +10,11 @@ export const blogsRepository = {
             return {
                 id: blog._id.toString(),
                 name: blog.name,
-                description: blog.description,}
+                description: blog.description,} as BlogViewType
         })
     },
 
-    async findBlogById (id: string): Promise<BlogType | null> {
+    async findBlogById (id: string): Promise<BlogViewType | null> {
         const blogId = await dbCollectionBlog.findOne({_id: new ObjectId(id)})
 
         if(blogId) {
@@ -32,19 +33,27 @@ export const blogsRepository = {
         return true
     },
 
-    async createBlog(inputData: { name: string; description: string; websiteUrl: string }) {
+    async createBlog(inputData: { name: string; description: string; websiteUrl: string }): Promise<BlogViewType> {
         let { name, description, websiteUrl } = inputData
 
-        const newBlog: BlogType = {
+        const newBlog: BlogDBType = {
+            _id: new ObjectId(),
             name,
             description,
             websiteUrl,
             createdAt: new Date().toISOString(),
             isMembership: false
+        };
+        await dbCollectionBlog.insertOne(newBlog)
+        console.log(newBlog)
+        return {
+            id: newBlog._id.toString(),
+            name: newBlog.name,
+            description: newBlog.description,
+            createdAt: newBlog.createdAt,
+            websiteUrl: newBlog.websiteUrl,
+            isMembership: newBlog.isMembership
         }
-        const result = await dbCollectionBlog.insertOne({...newBlog})
-      console.log(newBlog)
-        return {...newBlog, id: result.insertedId.toString()}
     },
 
     async updateBlogById(id: string, name: string, description: string, websiteUrl: string) {

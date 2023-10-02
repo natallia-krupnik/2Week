@@ -1,7 +1,4 @@
-import {BlogType, CreateBlogType} from "../../src/types/types";
-import {ObjectId} from "mongodb";
-
-export const createBlog = ():BlogType => ({
+export const createBlog = () => ({
     name: 'it-incubator',
     description: 'i am learning',
     websiteUrl: 'http://cccc.com',
