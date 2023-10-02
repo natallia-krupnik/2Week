@@ -1,4 +1,4 @@
-import {BlogDBType} from "../types/types";
+import {BlogDBType, BlogType} from "../types/types";
 import {ObjectId} from "mongodb";
 import {dbCollectionBlog} from "../db/db";
 import {BlogViewType} from "../../__tests__/e2e/posts-api.test";
@@ -40,18 +40,18 @@ export const blogsRepository = {
     async createBlog(inputData: { name: string; description: string; websiteUrl: string }): Promise<BlogViewType> {
         let { name, description, websiteUrl } = inputData
 
-        const newBlog: BlogDBType = {
-            _id: new ObjectId(),
+        const newBlog: BlogType = {
             name,
             description,
             websiteUrl,
             createdAt: new Date().toISOString(),
             isMembership: false
         };
-        await dbCollectionBlog.insertOne(newBlog)
+
+        const res = await dbCollectionBlog.insertOne({...newBlog})
 
         return {
-            id: newBlog._id.toString(),
+            id: res.insertedId.toString(),
             name: newBlog.name,
             description: newBlog.description,
             createdAt: newBlog.createdAt,

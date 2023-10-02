@@ -41,7 +41,7 @@ blogsRouter.delete(
     const id = req.params.id
 
     const blog = await blogsRepository.findBlogById(id)
-    if(!blog) return res.sendStatus(404)
+    if( !blog ) return res.status(HTTP_STATUSES.not_found_404)
 
     const blogIsDeleted = await blogsRepository.deleteBlogById(id)
 
@@ -79,7 +79,7 @@ blogsRouter.put(
         & RequestWithBody<{
         name: string,
         description: string,
-        websiteUrl: "https://DVRQ.16BihhBPyLWyxzJ1FYlwvXwIzP5vWKoBXgsHD8U6T0MxOfFITrUTaKXoxwKAbvaJUWEqy2tqA4w1Zm5uwoV8UGn"
+        websiteUrl: string
     }>,
     res: Response) =>{
 

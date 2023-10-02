@@ -1,7 +1,8 @@
-import {CreateInputData, CreatePostType, PostDBType, PostViewType} from "../types/types";
+import {CreateInputData, CreatePostType, PostDBType, PostType, PostViewType} from "../types/types";
 import { randomUUID } from "crypto";
 import {dbCollectionBlog, dbCollectionPost} from "../db/db";
 import { ObjectId } from "mongodb";
+import {blogsRepository} from "./blogs-db-repository";
 
 
 
@@ -16,7 +17,7 @@ export const postsRepository = {
                 content: post.content,
                 blogId: post.blogId,
                 blogName: post.blogName,
-                createdAt: new Date().toISOString().split('.')[0]
+                createdAt: post.createdAt
             }
         })
     },
@@ -39,28 +40,29 @@ export const postsRepository = {
         }
         return true    },
 
-    async createPost (inputData: CreateInputData & {blogName: string}): Promise<any> {
-        const {title, shortDescription, content, blogName,blogId} = inputData
+    async createPost (inputData: CreateInputData): Promise<any> {
+        const {title, shortDescription, content,blogId} = inputData
 
-        const newPost: PostDBType = {
-            _id: new ObjectId(),
+        const blog = await  blogsRepository.findBlogById(blogId);
+
+        const newPost: PostType = {
             title,
             shortDescription,
             content,
             blogId,
-            blogName,
-            createdAt: new Date().toISOString().split('.')[0]
+            blogName: blog!.name,
+            createdAt: new Date().toISOString()
         }
-        await dbCollectionPost.insertOne((newPost))
+        const res = await dbCollectionPost.insertOne((newPost))
 
         return {
-            id: newPost._id.toString(),
+            id: res.insertedId.toString(),
             title: newPost.title,
             shortDescription: newPost.shortDescription,
             content: newPost.content,
             blogId: newPost.blogId,
             blogName: newPost.blogName,
-            createdAt: new Date().toISOString().split('.')[0]
+            createdAt: newPost.createdAt
         }
     },
 
@@ -76,7 +78,6 @@ export const postsRepository = {
                 shortDescription,
                 content,
                 blogId,
-                createdAt: new Date().toISOString().split('.')[0]
             }
         }
         const result = await dbCollectionPost.updateOne({ _id: new ObjectId(id) }, updateField)

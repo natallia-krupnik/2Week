@@ -4,6 +4,7 @@ import {HTTP_STATUSES} from "../../src/types/statutes";
 import {createBlog} from "../helpers/blog";
 import {createPost, createPostTwo} from "../helpers/post";
 import {response} from "express";
+import {ObjectId} from "mongodb";
 
 
 export type BlogViewType = {
@@ -180,12 +181,12 @@ describe('/posts', () => {
         //         message: 'Post not found',
         //     });
         // }
-        const invalidId = '111a11b1-11c1-1111-1111-d1e1ab11c111'
+        const invalidId = new ObjectId()
 
         const existingPost = await request(app)
             .put(`/posts/${invalidId}`)
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
-            .send({title: 'I am gut', blogId: blog.id})
+            .send({title: 'I am gut', blogId: blog.id, shortDescription: "ffsdfsd", content: 'fsdfsd'})
             .expect(HTTP_STATUSES.not_found_404)
     })
 
