@@ -49,7 +49,7 @@ export const blogsRepository = {
             isMembership: false
         };
         await dbCollectionBlog.insertOne(newBlog)
-        console.log(newBlog)
+
         return {
             id: newBlog._id.toString(),
             name: newBlog.name,
