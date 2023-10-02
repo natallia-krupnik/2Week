@@ -74,7 +74,7 @@ blogsRouter.put(
     authGuardMiddleware,
     ValidateBlog(),
     ErrorsValidation,
-    (req: RequestWithParams<{
+    async (req: RequestWithParams<{
         id:string
     }>
         & RequestWithBody<{
@@ -87,7 +87,7 @@ blogsRouter.put(
     const id = req.params.id
     let {name, description, websiteUrl} = req.body
 
-    const updatedBlog = blogsRepository.updateBlogById(id, name, description, websiteUrl)
+    const updatedBlog = await blogsRepository.updateBlogById(id, name, description, websiteUrl)
 
     if(!updatedBlog) {
         res.status(HTTP_STATUSES.not_found_404).send('Not found')
