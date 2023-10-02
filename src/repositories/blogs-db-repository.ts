@@ -39,8 +39,8 @@ export const blogsRepository = {
             createdAt: new Date().toISOString(),
             isMembership: false
         }
-        const result = await dbCollectionBlog.insertOne(newBlog)
-        delete newBlog._id
+        const result = await dbCollectionBlog.insertOne({...newBlog})
+      console.log(newBlog)
         return {...newBlog, id: result.insertedId.toString()}
     },
 

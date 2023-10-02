@@ -29,7 +29,7 @@ postsRouter.get(
         return
     }
 
-    res.send(post)
+    res.status(200).send(post)
 })
 
 postsRouter.delete(

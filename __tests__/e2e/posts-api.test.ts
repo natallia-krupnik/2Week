@@ -7,7 +7,7 @@ import {response} from "express";
 import {BlogType} from "../../src/types/types";
 
 export type BlogViewType = {
-    _id: string,
+    id: string,
     name: string,
     description: string,
     websiteUrl: string,
@@ -34,7 +34,7 @@ describe('/posts', () => {
         post = await request(app)
             .post('/posts')
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
-            .send({...createPost(), blogId: blog._id})
+            .send({...createPost(), blogId: blog.id})
         //console.log('newPost', post.body)
     })
 
@@ -48,18 +48,18 @@ describe('/posts', () => {
                 title: 'I like Paris',
                 shortDescription: 'paris is beautiful',
                 content: 'super - puper - super',
-                blogId: blog._id
+                blogId: blog.id
             })
             .expect(HTTP_STATUSES.created_201)
 
         createdPost = createResponse.body
 
         expect(createdPost).toEqual({
-            _id: expect.any(String),
+            id: expect.any(String),
             title: 'I like Paris',
             shortDescription: 'paris is beautiful',
             content: 'super - puper - super',
-            blogId: blog._id,
+            blogId: blog.id,
             blogName: blog.name,
             createdAt: expect.any(String)
         })
@@ -78,7 +78,7 @@ describe('/posts', () => {
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
             .send({
                 title: '',
-                blogId: blog._id
+                blogId: blog.id
             })
             .expect(HTTP_STATUSES.bad_request_400)
     })
@@ -88,7 +88,7 @@ describe('/posts', () => {
         postTwo = await request(app)
             .post('/posts')
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
-            .send({...createPostTwo(), blogId: blog._id})
+            .send({...createPostTwo(), blogId: blog.id})
 
         const response = await request(app)
             .get('/posts')
@@ -98,10 +98,13 @@ describe('/posts', () => {
     })
 
     it('should GET posts by id', async () => {
-        const  response = await request(app)
-            .get(`/posts/${post.body._id}`)
 
-        expect(response.body._id).toBe(post.body._id)
+
+        const  response = await request(app)
+            .get(`/posts/${post.body.id}`)
+
+
+        expect(response.body.id).toBe(post.body.id)
     })
 
     it('should GET 404 for not existing post', () => {
@@ -111,20 +114,28 @@ describe('/posts', () => {
     })
 
     it(`should update post with correct input data`, async ()=> {
-        const updatedPost = await request(app)
-            .put(`/posts/${post.body._id}`)
+
+        console.log('postId in update:', post.body.id)
+        await request(app)
+            .put(`/posts/${post.body.id}`)
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
             .send({
                 title: 'New good title',
-            })
-            .expect(HTTP_STATUSES.no_content_204)
+                blogId: blog.id,
+                shortDescription: 'the best Post',
+                content: 'super',
 
-        expect(updatedPost.body).toEqual({
-            _id: expect.any(String),
+            })
+            .expect(204)
+
+        const updatedPost = await request(app).get(`/posts/${post.body.id}`).expect(200)
+
+            expect(updatedPost.body).toEqual({
+            id: expect.any(String),
             title: 'New good title',
             shortDescription: 'the best Post',
             content: 'super',
-            blogId: blog._id,
+            blogId: blog.id,
             blogName: blog.name,
             createdAt: expect.any(String)
         })
@@ -133,9 +144,9 @@ describe('/posts', () => {
     it(`shouldn't update post with incorrect input data`, async ()=> {
 
         const notStringData = await request(app)
-            .put(`/posts/${post.body._id}`)
+            .put(`/posts/${post.body.id}`)
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
-            .send({title: ''})
+            .send({title: '', blogId: blog.id})
             .expect(HTTP_STATUSES.bad_request_400)
 
         expect(notStringData.body).toEqual({
@@ -143,13 +154,22 @@ describe('/posts', () => {
                 {
                     message: expect.any(String),
                     field: 'title'
+                },
+                {
+                    message: expect.any(String),
+                    field: 'shortDescription'
+                },
+                {
+                    message: expect.any(String),
+                    field: 'content'
                 }
+
             ]
         })
     })
 
     it(`shouldn't update post that not exist`, async ()=> {
-        const invalidId = '000000000000000000000000'
+        const invalidId = '111a11b1-11c1-1111-1111-d1e1ab11c111'
         await request(app)
             .put(`/posts/${invalidId}`)
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
@@ -159,18 +179,18 @@ describe('/posts', () => {
 
     it('should delete post by ID', async() => {
         await request(app)
-            .delete(`/posts/${post.body._id}`)
+            .delete(`/posts/${post.body.id}`)
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
             .expect(HTTP_STATUSES.no_content_204)
 
         await request(app)
-            .get(`/posts/${post.body._id}`)
+            .get(`/posts/${post.body.id}`)
             .expect(HTTP_STATUSES.not_found_404)
     })
 
     it(`shouldn't delete post by incorrect ID`, async() => {
         await request(app)
-            .delete(`/posts/${post.body._id}`)
+            .delete(`/posts/${post.body.id}`)
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
             .expect(HTTP_STATUSES.not_found_404)
     })

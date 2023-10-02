@@ -7,19 +7,20 @@ import { ObjectId } from "mongodb";
 
 export const postsRepository = {
     async getAllPosts () {
-        const posts = await dbCollectionPost.find({}, {projection: {_id: 0}}).toArray()
+        const posts = await dbCollectionPost.find({}).toArray()
         return posts.map((post) => {
             return  {...post, id: post._id.toString()}
         })
     },
 
     async findPostByID (id: string): Promise<PostType | null> {
-        const postId = await dbCollectionPost.findOne({_id: new ObjectId(id)})
+        const post = await dbCollectionPost.findOne({_id: new ObjectId(id)})
 
-        if(postId) {
-            const {_id, ...rest} = postId
-            return {...rest, id: postId._id.toString()}
+        if(post) {
+            const {_id, ...rest} = post
+            return {...rest, id: post._id.toString()}
         }
+        return null
     },
 
     async deletePostById (id: string) : Promise<boolean> {
@@ -41,9 +42,9 @@ export const postsRepository = {
             blogName,
             createdAt: new Date().toISOString()
         }
-        const res = await dbCollectionPost.insertOne(newPost)
-        delete newPost._id
-        return {...newPost, _id: res.insertedId.toString()}
+        const res = await dbCollectionPost.insertOne({...newPost})
+
+        return {...newPost, id: res.insertedId.toString()}
     },
 
     async updatePostById(id: string, title: string, shortDescription: string, content: string, blogId: string) {
