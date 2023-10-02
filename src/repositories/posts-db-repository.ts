@@ -16,7 +16,7 @@ export const postsRepository = {
                 content: post.content,
                 blogId: post.blogId,
                 blogName: post.blogName,
-                createdAt: new Date().toISOString()
+                createdAt: new Date().toISOString().split('.')[0]
             }
         })
     },
@@ -49,7 +49,7 @@ export const postsRepository = {
             content,
             blogId,
             blogName,
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString().split('.')[0]
         }
         await dbCollectionPost.insertOne((newPost))
 
@@ -60,7 +60,7 @@ export const postsRepository = {
             content: newPost.content,
             blogId: newPost.blogId,
             blogName: newPost.blogName,
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString().split('.')[0]
         }
     },
 
@@ -76,7 +76,7 @@ export const postsRepository = {
                 shortDescription,
                 content,
                 blogId,
-                createdAt: new Date().toISOString()
+                createdAt: new Date().toISOString().split('.')[0]
             }
         }
         const result = await dbCollectionPost.updateOne({ _id: new ObjectId(id) }, updateField)
