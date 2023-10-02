@@ -1,10 +1,10 @@
 import request from 'supertest'
-import {app} from "../../src";
-import {HTTP_STATUSES} from "../../src/types/statutes";
+import {HTTP_STATUSES} from "../../types/statutes";
 import {createBlog} from "../helpers/blog";
 import {createPost, createPostTwo} from "../helpers/post";
 import {response} from "express";
 import {ObjectId} from "mongodb";
+import {app} from "../../settings";
 
 
 export type BlogViewType = {

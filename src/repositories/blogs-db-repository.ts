@@ -1,7 +1,7 @@
 import {BlogDBType, BlogType} from "../types/types";
 import {ObjectId} from "mongodb";
 import {dbCollectionBlog} from "../db/db";
-import {BlogViewType} from "../../__tests__/e2e/posts-api.test";
+import {BlogViewType} from "../__tests__/e2e/posts-api.test";
 
 export const blogsRepository = {
     async getAllBlogs () {
@@ -18,17 +18,22 @@ export const blogsRepository = {
         })
     },
 
-    async findBlogById (id: string): Promise<BlogViewType | null> {
-        const blogId = await dbCollectionBlog.findOne({_id: new ObjectId(id)})
+    async findBlogById (id: string): Promise<BlogViewType | null>{
+        if (!ObjectId.isValid(id)) return null
 
-        if(blogId) {
-            const {_id, ...rest} = blogId
-            return {...rest, id: blogId._id.toString()}
-        }
-        return null
+            const blogId = await dbCollectionBlog.findOne({_id: new ObjectId(id)})
+
+            if(blogId) {
+                const {_id, ...rest} = blogId
+                return {...rest, id: blogId._id.toString()}
+            }
+            return null
+
     },
 
     async deleteBlogById (id: string) {
+        if (!ObjectId.isValid(id)) return null
+
         const result = await dbCollectionBlog.deleteOne({_id: new ObjectId(id)})
 
         if (result.deletedCount === 0) {
@@ -61,6 +66,7 @@ export const blogsRepository = {
     },
 
     async updateBlogById(id: string, name: string, description: string, websiteUrl: string) {
+        if (!ObjectId.isValid(id)) return null
         const blog = await dbCollectionBlog.findOne({_id: new ObjectId(id)})
 
         if (!blog) {

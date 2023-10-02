@@ -41,9 +41,11 @@ blogsRouter.delete(
     const id = req.params.id
 
     const blog = await blogsRepository.findBlogById(id)
+        console.log('after get')
     if( !blog ) return res.status(HTTP_STATUSES.not_found_404).send()
 
     const blogIsDeleted = await blogsRepository.deleteBlogById(id)
+        console.log('after delete')
 
     if(!blogIsDeleted) {
         res.status(HTTP_STATUSES.not_found_404).send('Not Found')
