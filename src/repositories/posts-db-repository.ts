@@ -16,7 +16,7 @@ export const postsRepository = {
                 content: post.content,
                 blogId: post.blogId,
                 blogName: post.blogName,
-                createdAt: post.createdAt
+                createdAt: new Date().toISOString().split('.')[0]
             }
         })
     },
@@ -60,7 +60,7 @@ export const postsRepository = {
             content: newPost.content,
             blogId: newPost.blogId,
             blogName: newPost.blogName,
-            createdAt: newPost.createdAt
+            createdAt: new Date().toISOString().split('.')[0]
         }
     },
 
