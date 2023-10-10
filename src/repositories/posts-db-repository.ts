@@ -1,15 +1,54 @@
-import {CreateInputData, CreatePostType, PostDBType, PostType, PostViewType} from "../types/types";
-import { randomUUID } from "crypto";
-import {dbCollectionBlog, dbCollectionPost} from "../db/db";
+import {PostType, PostViewType, QueryTypeView} from "../types/types";
+import { dbCollectionPost } from "../db/db";
 import { ObjectId } from "mongodb";
-import {blogsRepository} from "./blogs-db-repository";
 
-
+type Test = {
+    [key: string]: any
+}
 
 export const postsRepository = {
-    async getAllPosts () {
-        const posts = await dbCollectionPost.find({}).toArray()
-        return posts.map((post) => {
+
+    async getAllPosts (defaultResult: QueryTypeView) {
+const{pageNumber, pageSize, sortBy, sortDirection} = defaultResult
+        const skip = (pageNumber -1) * pageSize
+        const sort: Test = {}
+        sort[sortBy] = sortDirection === 'asc' ? 1 : -1
+
+        const posts = await dbCollectionPost
+            .find({})
+            .sort(sort)
+            .skip(skip)
+            .limit(pageSize)
+            .toArray()
+
+        const totalCount = await dbCollectionPost.countDocuments()
+
+        const pagesCount = Math.ceil(totalCount/ pageSize)
+
+        return {
+            pagesCount,
+            page: pageNumber,
+            pageSize,
+            totalCount,
+            items: posts.map(post => ({
+                id: post._id.toString(),
+                title: post.title,
+                shortDescription: post.shortDescription,
+                content: post.content,
+                blogId: post.blogId,
+                blogName: post.blogName,
+                createdAt: post.createdAt
+            }))
+        }
+    },
+
+
+
+
+    async findPostByID (id: string): Promise<PostViewType | null> {
+        const post = await dbCollectionPost.findOne({_id: new ObjectId(id)})
+
+        if(post) {
             return {
                 id: post._id.toString(),
                 title: post.title,
@@ -19,40 +58,12 @@ export const postsRepository = {
                 blogName: post.blogName,
                 createdAt: post.createdAt
             }
-        })
-    },
-
-    async findPostByID (id: string): Promise<PostViewType | null> {
-        const post = await dbCollectionPost.findOne({_id: new ObjectId(id)})
-
-        if(post) {
-            const {_id, ...rest} = post
-            return {...rest, id: post._id.toString()}
         }
         return null
     },
 
-    async deletePostById (id: string) : Promise<boolean> {
-        const result = await dbCollectionPost.deleteOne({_id: new ObjectId(id)})
+    async createPost (newPost: PostType): Promise<PostViewType> {
 
-        if (result.deletedCount === 0) {
-            return false
-        }
-        return true    },
-
-    async createPost (inputData: CreateInputData): Promise<any> {
-        const {title, shortDescription, content,blogId} = inputData
-
-        const blog = await  blogsRepository.findBlogById(blogId);
-
-        const newPost: PostType = {
-            title,
-            shortDescription,
-            content,
-            blogId,
-            blogName: blog!.name,
-            createdAt: new Date().toISOString()
-        }
         const res = await dbCollectionPost.insertOne((newPost))
 
         return {
@@ -84,6 +95,14 @@ export const postsRepository = {
 
         return result.matchedCount === 1
     },
+
+    async deletePostById (id: string) : Promise<boolean> {
+        const result = await dbCollectionPost.deleteOne({_id: new ObjectId(id)})
+
+        if (result.deletedCount === 0) {
+            return false
+        }
+        return true    },
 
     async deleteAllPosts () {
         const result = await dbCollectionPost.deleteMany()

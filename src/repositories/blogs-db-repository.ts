@@ -1,58 +1,55 @@
-import {BlogDBType, BlogType} from "../types/types";
+import {BlogDBType, BlogType, QueryTypeViewBlogs} from "../types/types";
 import {ObjectId} from "mongodb";
 import {dbCollectionBlog} from "../db/db";
 import {BlogViewType} from "../__tests__/e2e/posts-api.test";
 
+
+type Blog = {
+    [key: string]: any
+}
+
 export const blogsRepository = {
-    async getAllBlogs () {
-        const blogs = await dbCollectionBlog.find({}).toArray()
-        return blogs.map((blog) => {
-            return {
+    async getAllBlogs (defaultResult: QueryTypeViewBlogs) {
+
+        const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } = defaultResult
+        const skip = (pageNumber - 1) * pageSize
+
+        const sort: Blog = {}
+        sort[sortBy] = sortDirection === 'desc'? -1: 1
+
+        // todo разобраться с any написать типы для query
+        const query: any = {}
+        if(searchNameTerm) {
+            query.name = { $regex: searchNameTerm, $options: 'i'}
+        }
+
+        const blogs = await dbCollectionBlog
+            .find(query)
+            .sort(sort)
+            .skip(skip)
+            .limit(pageSize)
+            .toArray()
+
+        const totalCount = await dbCollectionBlog.countDocuments()
+        const pagesCount = Math.ceil(totalCount/ pageSize)
+
+        return {
+            pagesCount,
+            page: pageNumber,
+            pageSize,
+            totalCount,
+            items: blogs.map(blog => ({
                 id: blog._id.toString(),
                 name: blog.name,
                 description: blog.description,
                 websiteUrl: blog.websiteUrl,
                 isMembership: blog.isMembership,
                 createdAt: blog.createdAt
-            }
-        })
-    },
-
-    async findBlogById (id: string): Promise<BlogViewType | null>{
-        if (!ObjectId.isValid(id)) return null
-
-            const blogId = await dbCollectionBlog.findOne({_id: new ObjectId(id)})
-
-            if(blogId) {
-                const {_id, ...rest} = blogId
-                return {...rest, id: blogId._id.toString()}
-            }
-            return null
-
-    },
-
-    async deleteBlogById (id: string) {
-        if (!ObjectId.isValid(id)) return null
-
-        const result = await dbCollectionBlog.deleteOne({_id: new ObjectId(id)})
-
-        if (result.deletedCount === 0) {
-            return false
+            }))
         }
-        return true
     },
 
-    async createBlog(inputData: { name: string; description: string; websiteUrl: string }): Promise<BlogViewType> {
-        let { name, description, websiteUrl } = inputData
-
-        const newBlog: BlogType = {
-            name,
-            description,
-            websiteUrl,
-            createdAt: new Date().toISOString(),
-            isMembership: false
-        };
-
+    async createBlog(newBlog: BlogType): Promise<BlogViewType> {
         const res = await dbCollectionBlog.insertOne({...newBlog})
 
         return {
@@ -65,7 +62,21 @@ export const blogsRepository = {
         }
     },
 
+    async findBlogById (id: string): Promise<BlogViewType | null>{
+        //моя проверка на id
+        if (!ObjectId.isValid(id)) return null
+
+            const blogId = await dbCollectionBlog.findOne({_id: new ObjectId(id)})
+
+            if(blogId) {
+                const {_id, ...rest} = blogId
+                return {...rest, id: blogId._id.toString()}
+            }
+            return null
+    },
+
     async updateBlogById(id: string, name: string, description: string, websiteUrl: string) {
+        //моя проверка на id
         if (!ObjectId.isValid(id)) return null
         const blog = await dbCollectionBlog.findOne({_id: new ObjectId(id)})
 
@@ -83,6 +94,18 @@ export const blogsRepository = {
         const result = await dbCollectionBlog.updateOne({ _id: new ObjectId(id) }, updateField)
 
         return result.matchedCount === 1
+    },
+
+    async deleteBlogById (id: string) {
+        //моя проверка на id
+        if (!ObjectId.isValid(id)) return null
+
+        const result = await dbCollectionBlog.deleteOne({_id: new ObjectId(id)})
+
+        if (result.deletedCount === 0) {
+            return false
+        }
+        return true
     },
 
     async deleteAllBlogs() {

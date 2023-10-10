@@ -1,28 +1,43 @@
 import {Response, Request, Router} from "express";
 import {RequestWithBody, RequestWithParams} from "../types/requests";
 import {HTTP_STATUSES} from "../types/statutes";
-import {postsRepository} from "../repositories/posts-db-repository";
 import {authGuardMiddleware} from "../middleware/authGuardMiddleware";
 import {ValidatePost} from "../middleware/post/post-validation-middleware";
 import {ErrorsValidation} from "../middleware/errorsValidation";
-import {blogsRepository} from "../repositories/blogs-db-repository";
-import {CreateInputData} from "../types/types";
+import {CreateInputData, PostViewType, QueryParamsInput, QueryTypeView} from "../types/types";
+import { postsService } from "../domain (business layer)/posts-service";
+import {blogsService} from "../domain (business layer)/blogs-service";
+import {sortQueryParams} from "./helpers/helpers-posts-blogs";
 
 export const postsRouter = Router({})
 
 postsRouter.get(
     '/',
-    async (req: Request, res: Response) =>{
-    const allPosts = await postsRepository.getAllPosts()
+    async (req: RequestWithParams<QueryParamsInput>, res: Response) =>{
 
-    res.status(HTTP_STATUSES.ok_200).send(allPosts)
+        const defaultResult: QueryTypeView = sortQueryParams(req.query)
+        const allPosts = await postsService.getAllPosts(defaultResult)
+
+        res.status(HTTP_STATUSES.ok_200).send(allPosts)
 })
+
+
+postsRouter.post(
+    '/',
+    authGuardMiddleware,
+    ValidatePost(),
+    ErrorsValidation,
+    async (req: RequestWithBody<CreateInputData>, res: Response<PostViewType>) => {
+        const newCreatedPost = await postsService.createPost({...req.body})
+        return res.status(HTTP_STATUSES.created_201).send(newCreatedPost)
+    })
+
 
 postsRouter.get(
     '/:id',
     async (req: RequestWithParams<{ id: string }>, res: Response) => {
         const id = req.params.id
-        const post = await postsRepository.findPostByID(id)
+        const post = await postsService.findPostByID(id)
 
     if(!post) {
         res.status(HTTP_STATUSES.not_found_404).send('Not found')
@@ -32,34 +47,6 @@ postsRouter.get(
     res.status(200).send(post)
 })
 
-postsRouter.delete(
-    '/:id',
-    authGuardMiddleware,
-    async (req:Request<{id:string}>, res: Response) => {
-        const id = req.params.id
-
-        const post = await postsRepository.findPostByID(id)
-        if (!post) return res.sendStatus(404)
-
-        const deletedPostById = await postsRepository.deletePostById(id)
-
-        if(!deletedPostById) {
-            res.status(HTTP_STATUSES.not_found_404).send('Not found')
-            return
-        }
-
-        return res.status(HTTP_STATUSES.no_content_204).send('No content')
-})
-
-postsRouter.post(
-    '/',
-    authGuardMiddleware,
-    ValidatePost(),
-    ErrorsValidation,
-    async (req: RequestWithBody<CreateInputData>, res: Response) => {
-        const newCreatedPost = await postsRepository.createPost({...req.body})
-        return res.status(HTTP_STATUSES.created_201).send(newCreatedPost)
-    })
 
 postsRouter.put(
     '/:id',
@@ -74,15 +61,15 @@ postsRouter.put(
         shortDescription: string,
         content: string,
         blogId: string
-    }>, res: Response) => {
+    }>, res: Response) => { // какой тут Promise??
 
-        const blog = await blogsRepository.findBlogById(req.body.blogId)
+        const blog = await blogsService.findBlogById(req.body.blogId)
         if (!blog) return res.sendStatus(HTTP_STATUSES.not_found_404)
 
         const id = req.params.id
         let { title, shortDescription, content, blogId} = req.body
 
-        const updatePost = await postsRepository.updatePostById(id, title, shortDescription, content, blogId)
+        const updatePost = await postsService.updatePostById(id, title, shortDescription, content, blogId)
 
         if(!updatePost) {
             res.status(HTTP_STATUSES.not_found_404).send('No found')
@@ -91,3 +78,22 @@ postsRouter.put(
 
         return res.status(HTTP_STATUSES.no_content_204).send('No content')
 })
+
+postsRouter.delete(
+    '/:id',
+    authGuardMiddleware,
+    async (req:Request<{id:string}>, res: Response) => {
+        const id = req.params.id
+
+        const post = await postsService.findPostByID(id)
+        if (!post) return res.sendStatus(404)
+
+        const deletedPostById = await postsService.deletePostById(id)
+
+        if(!deletedPostById) {
+            res.status(HTTP_STATUSES.not_found_404).send('Not found')
+            return
+        }
+
+        return res.status(HTTP_STATUSES.no_content_204).send('No content')
+    })
