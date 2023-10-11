@@ -41,7 +41,7 @@ export const ValidatePost = ()=> {
     ]
 }
 
-export const ValidatePostWithoitBlogId = ()=> {
+export const ValidatePostWithoutBlogId = ()=> {
     return [
         body('title')
             .notEmpty()

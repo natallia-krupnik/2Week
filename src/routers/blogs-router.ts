@@ -8,7 +8,7 @@ import {blogsService} from "../domain (business layer)/blogs-service";
 import {QueryParamsBlogsInput, QueryTypeView, QueryTypeViewBlogs} from "../types/types";
 import {postsService} from "../domain (business layer)/posts-service";
 import {sortQueryParams, sortQueryParamsBlogs} from "./helpers/helpers-posts-blogs";
-import {ValidatePostWithoitBlogId} from "../middleware/post/post-validation-middleware";
+import {ValidatePostWithoutBlogId} from "../middleware/post/post-validation-middleware";
 import {blogsRepository} from "../repositories/blogs-db-repository";
 
 export const blogsRouter = Router({})
@@ -68,7 +68,7 @@ blogsRouter.get(
 blogsRouter.post(
     '/:blogId/posts',
     authGuardMiddleware,
-    ValidatePostWithoitBlogId(),
+    ValidatePostWithoutBlogId(),
     ErrorsValidation,
     async (req: RequestWithParams<{ blogId: string }>
         & RequestWithBody<{
@@ -78,7 +78,7 @@ blogsRouter.post(
     }>, res: Response) =>{
 
         //где должна быть эта проверка. Тут или в service
-        const blogById = await  blogsRepository.findBlogById(req.params.blogId);
+        const blogById = await  blogsService.findBlogById(req.params.blogId);
         if(blogById) {
             res.sendStatus(HTTP_STATUSES.not_found_404)
             return
@@ -135,9 +135,8 @@ blogsRouter.delete(
         const id = req.params.id
 
         const blog = await blogsService.findBlogById(id)
-        console.log('after get')
-        if( !blog ) return res.status(HTTP_STATUSES.not_found_404).send()
 
+        if( !blog ) return res.status(HTTP_STATUSES.not_found_404).send()
         const blogIsDeleted = await blogsService.deleteBlogById(id)
 
         if(!blogIsDeleted) {
