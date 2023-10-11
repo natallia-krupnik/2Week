@@ -77,9 +77,8 @@ blogsRouter.post(
         content: string
     }>, res: Response) =>{
 
-        //где должна быть эта проверка. Тут или в service
         const blogById = await  blogsService.findBlogById(req.params.blogId);
-        if(blogById) {
+        if(!blogById) {
             res.sendStatus(HTTP_STATUSES.not_found_404)
             return
         }
