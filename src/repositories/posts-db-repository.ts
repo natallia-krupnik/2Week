@@ -21,7 +21,7 @@ const{pageNumber, pageSize, sortBy, sortDirection} = defaultResult
             .limit(pageSize)
             .toArray()
 
-        const totalCount = await dbCollectionPost.countDocuments()
+        const totalCount = await dbCollectionPost.countDocuments({})
 
         const pagesCount = Math.ceil(totalCount/ pageSize)
 
