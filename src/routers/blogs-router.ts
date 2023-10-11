@@ -59,7 +59,7 @@ blogsRouter.get(
 
         const defaultResult: QueryTypeView = sortQueryParams(req.query)
 
-        const allPostsForBlog = await postsService.getAllPosts(defaultResult)
+        const allPostsForBlog = await postsService.getAllPosts(defaultResult, req.params.blogId)
 
         return res.status(HTTP_STATUSES.ok_200).send(allPostsForBlog)
     })

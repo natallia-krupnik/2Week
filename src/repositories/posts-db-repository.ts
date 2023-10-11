@@ -8,14 +8,14 @@ type Test = {
 
 export const postsRepository = {
 
-    async getAllPosts (defaultResult: QueryTypeView) {
-const{pageNumber, pageSize, sortBy, sortDirection} = defaultResult
+    async getAllPosts (defaultResult: QueryTypeView, blogId?: string) {
+    const{pageNumber, pageSize, sortBy, sortDirection} = defaultResult
         const skip = (pageNumber -1) * pageSize
         const sort: Test = {}
         sort[sortBy] = sortDirection === 'asc' ? 1 : -1
 
         const posts = await dbCollectionPost
-            .find({})
+            .find({ blogId: blogId })
             .sort(sort)
             .skip(skip)
             .limit(pageSize)
@@ -42,8 +42,14 @@ const{pageNumber, pageSize, sortBy, sortDirection} = defaultResult
         }
     },
 
-
-
+//     async getAllPostsForBlog (defaultResult: QueryTypeView, blogId:string){
+//     const { pageNumber, pageSize, sortBy, sortDirection } = defaultResult
+//
+//     const skip = (pageNumber-1)*pageSize
+//
+//     const sort = {}
+//     sort
+// },
 
     async findPostByID (id: string): Promise<PostViewType | null> {
         const post = await dbCollectionPost.findOne({_id: new ObjectId(id)})

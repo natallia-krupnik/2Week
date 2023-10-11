@@ -6,8 +6,8 @@ import {HTTP_STATUSES} from "../types/statutes";
 
 export const postsService = {
 
-    async getAllPosts (defaultResult:QueryTypeView) {
-        return await postsRepository.getAllPosts(defaultResult)
+    async getAllPosts (defaultResult:QueryTypeView, blogId?:string) {
+        return await postsRepository.getAllPosts(defaultResult, blogId)
     },
 
     async createPost (inputData: CreateInputData): Promise<PostViewType> {
