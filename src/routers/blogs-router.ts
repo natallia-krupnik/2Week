@@ -50,8 +50,8 @@ blogsRouter.get(
             blogId: string
         }>, res: Response) => {
 
+        //где должна быть эта проверка. Тут или в service
         const blogById = await blogsService.findBlogById(req.params.blogId)
-
         if(!blogById) {
             res.sendStatus(HTTP_STATUSES.not_found_404)
             return
@@ -61,7 +61,7 @@ blogsRouter.get(
 
         const allPostsForBlog = await postsService.getAllPosts(defaultResult)
 
-        return res.status(HTTP_STATUSES.created_201).send(allPostsForBlog)
+        return res.status(HTTP_STATUSES.ok_200).send(allPostsForBlog)
     })
 
 // create Post for Blog with ID
@@ -76,10 +76,13 @@ blogsRouter.post(
         shortDescription: string,
         content: string
     }>, res: Response) =>{
-        // const blog = await  blogsRepository.findBlogById(req.params.blogId);
-        // if(!blog) {
-        //     throw new Error('404')
-        // }
+
+        //где должна быть эта проверка. Тут или в service
+        const blogById = await  blogsRepository.findBlogById(req.params.blogId);
+        if(blogById) {
+            res.sendStatus(HTTP_STATUSES.not_found_404)
+            return
+        }
         const newCreatedPost = await postsService.createPost({...req.body, ...req.params})
         return res.status(HTTP_STATUSES.created_201).send(newCreatedPost)
     })
@@ -88,8 +91,8 @@ blogsRouter.get(
     '/:id',
     async (req: RequestWithParams<{ id: string }>, res: Response) => {
 
+    //где должна быть эта проверка. Тут или в service
     const blogByID = await blogsService.findBlogById(req.params.id)
-
     if(!blogByID) {
         res.status(HTTP_STATUSES.not_found_404).send('Not found')
         return

@@ -14,15 +14,15 @@ export const postsService = {
         const {title, shortDescription, content,blogId} = inputData
 
         const blog = await  blogsRepository.findBlogById(blogId);
-        if(!blog) {
-            throw new Error('404')
-        }
+        // if(!blog) {
+        //     throw new Error('404')
+        // }
         const newPost: PostType = {
             title,
             shortDescription,
             content,
             blogId,
-            blogName: blog.name,
+            blogName: blog!.name,
             createdAt: new Date().toISOString()
         }
 
