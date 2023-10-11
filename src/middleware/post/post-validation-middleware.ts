@@ -40,3 +40,28 @@ export const ValidatePost = ()=> {
             .withMessage('Invalid blogId'),
     ]
 }
+
+export const ValidatePostWithoitBlogId = ()=> {
+    return [
+        body('title')
+            .notEmpty()
+            .isString()
+            .trim()
+            .isLength({min:1, max: 30})
+            .withMessage('Invalid title'),
+
+        body('shortDescription')
+            .notEmpty()
+            .isString()
+            .trim()
+            .isLength({min: 1, max: 100})
+            .withMessage('Invalid shortDescription'),
+
+        body('content')
+            .notEmpty()
+            .isString()
+            .trim()
+            .isLength({ min: 1, max: 1000 })
+            .withMessage('Invalid content'),
+    ]
+}

@@ -17,7 +17,6 @@ export const blogsRepository = {
         const sort: Blog = {}
         sort[sortBy] = sortDirection === 'desc'? -1: 1
 
-        // todo разобраться с any написать типы для query
         const query: any = {}
         if(searchNameTerm) {
             query.name = { $regex: searchNameTerm, $options: 'i'}
@@ -30,7 +29,7 @@ export const blogsRepository = {
             .limit(pageSize)
             .toArray()
 
-        const totalCount = await dbCollectionBlog.countDocuments()
+        const totalCount = await dbCollectionBlog.countDocuments(query) // нужен query так как без него даст все доки
         const pagesCount = Math.ceil(totalCount/ pageSize)
 
         return {

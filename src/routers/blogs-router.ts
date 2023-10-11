@@ -8,6 +8,8 @@ import {blogsService} from "../domain (business layer)/blogs-service";
 import {QueryParamsBlogsInput, QueryTypeView, QueryTypeViewBlogs} from "../types/types";
 import {postsService} from "../domain (business layer)/posts-service";
 import {sortQueryParams, sortQueryParamsBlogs} from "./helpers/helpers-posts-blogs";
+import {ValidatePostWithoitBlogId} from "../middleware/post/post-validation-middleware";
+import {blogsRepository} from "../repositories/blogs-db-repository";
 
 export const blogsRouter = Router({})
 
@@ -59,14 +61,14 @@ blogsRouter.get(
 
         const allPostsForBlog = await postsService.getAllPosts(defaultResult)
 
-        return res.status(HTTP_STATUSES.ok_200).send(allPostsForBlog)
+        return res.status(HTTP_STATUSES.created_201).send(allPostsForBlog)
     })
 
 // create Post for Blog with ID
 blogsRouter.post(
     '/:blogId/posts',
     authGuardMiddleware,
-    ValidateBlog(),
+    ValidatePostWithoitBlogId(),
     ErrorsValidation,
     async (req: RequestWithParams<{ blogId: string }>
         & RequestWithBody<{
@@ -74,7 +76,10 @@ blogsRouter.post(
         shortDescription: string,
         content: string
     }>, res: Response) =>{
-
+        // const blog = await  blogsRepository.findBlogById(req.params.blogId);
+        // if(!blog) {
+        //     throw new Error('404')
+        // }
         const newCreatedPost = await postsService.createPost({...req.body, ...req.params})
         return res.status(HTTP_STATUSES.created_201).send(newCreatedPost)
     })
