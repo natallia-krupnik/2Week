@@ -1,7 +1,6 @@
 import {CreateInputData, PostType, PostViewType, QueryTypeView} from "../types/types";
 import {blogsRepository} from "../repositories/blogs-db-repository";
 import {postsRepository} from "../repositories/posts-db-repository";
-import {HTTP_STATUSES} from "../types/statutes";
 
 
 export const postsService = {
@@ -14,9 +13,7 @@ export const postsService = {
         const {title, shortDescription, content,blogId} = inputData
 
         const blog = await  blogsRepository.findBlogById(blogId);
-        // if(!blog) {
-        //     throw new Error('404')
-        // }
+
         const newPost: PostType = {
             title,
             shortDescription,

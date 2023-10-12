@@ -36,7 +36,6 @@ describe('/posts', () => {
             .post('/posts')
             .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
             .send({...createPost(), blogId: blog.id})
-        //console.log('newPost', post.body)
     })
 
     afterAll((done)=> done())

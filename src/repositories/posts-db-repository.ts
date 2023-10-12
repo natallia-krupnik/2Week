@@ -15,13 +15,13 @@ export const postsRepository = {
         sort[sortBy] = sortDirection === 'asc' ? 1 : -1
 
         const posts = await dbCollectionPost
-            .find({ blogId: blogId })
+            .find(blogId? { blogId: blogId }: {})
             .sort(sort)
             .skip(skip)
             .limit(pageSize)
             .toArray()
 
-        const totalCount = await dbCollectionPost.countDocuments({})
+        const totalCount = await dbCollectionPost.countDocuments(blogId? { blogId: blogId }: {})
 
         const pagesCount = Math.ceil(totalCount/ pageSize)
 
@@ -41,15 +41,6 @@ export const postsRepository = {
             }))
         }
     },
-
-//     async getAllPostsForBlog (defaultResult: QueryTypeView, blogId:string){
-//     const { pageNumber, pageSize, sortBy, sortDirection } = defaultResult
-//
-//     const skip = (pageNumber-1)*pageSize
-//
-//     const sort = {}
-//     sort
-// },
 
     async findPostByID (id: string): Promise<PostViewType | null> {
         const post = await dbCollectionPost.findOne({_id: new ObjectId(id)})
