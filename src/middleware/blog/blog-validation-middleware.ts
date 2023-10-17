@@ -25,27 +25,27 @@ export const ValidateBlog = () => {
             .withMessage( 'Invalid websiteUrl'),
     ]
 }
-export const ValidatePostsForBlog = () => {
-    return [
-        body('title')
-            .notEmpty()
-            .isString()
-            .trim()
-            .isLength({min:1})
-            .withMessage('Invalid Name'),
-
-        body('shortDescription')
-            .notEmpty()
-            .isString()
-            .trim()
-            .isLength({min: 1})
-            .withMessage('Invalid description'),
-
-        body('content')
-            .notEmpty()
-            .isString()
-            .trim()
-            .isLength({ min: 1 })
-            .withMessage( 'Invalid websiteUrl'),
-    ]
-}
+// export const ValidatePostsForBlog = () => {
+//     return [
+//         body('title')
+//             .notEmpty()
+//             .isString()
+//             .trim()
+//             .isLength({min:1})
+//             .withMessage('Invalid Name'),
+//
+//         body('shortDescription')
+//             .notEmpty()
+//             .isString()
+//             .trim()
+//             .isLength({min: 1})
+//             .withMessage('Invalid description'),
+//
+//         body('content')
+//             .notEmpty()
+//             .isString()
+//             .trim()
+//             .isLength({ min: 1 })
+//             .withMessage( 'Invalid websiteUrl'),
+//     ]
+// }

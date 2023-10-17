@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 dotenv.config()
 import { MongoClient } from "mongodb";
-import {BlogDBType, BlogType, PostDBType, PostType} from "../types/types";
+import {BlogDBType, BlogType, NewUserType, PostDBType, PostType} from "../types/types";
 
 const mongoUri = process.env.MONGO_URL || ''
 
@@ -9,6 +9,8 @@ const client = new MongoClient(mongoUri)
 const db = client.db('shop-it')
 export const dbCollectionBlog = db.collection <BlogType> ('blogs')
 export const dbCollectionPost = db.collection <PostType> ('posts')
+
+export const dbCollectionUser = db.collection<NewUserType>('users')
 
 
 

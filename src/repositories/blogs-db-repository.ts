@@ -9,6 +9,7 @@ type Blog = {
 }
 
 export const blogsRepository = {
+
     async getAllBlogs (defaultResult: QueryTypeViewBlogs) {
 
         const { pageNumber, pageSize, sortBy, sortDirection, searchNameTerm } = defaultResult

@@ -61,7 +61,7 @@ postsRouter.put(
         shortDescription: string,
         content: string,
         blogId: string
-    }>, res: Response) => { // какой тут Promise??
+    }>, res: Response) => {
 
         const blog = await blogsService.findBlogById(req.body.blogId)
         if (!blog) return res.sendStatus(HTTP_STATUSES.not_found_404)

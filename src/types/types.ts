@@ -1,5 +1,45 @@
 import {WithId} from "mongodb";
+//Auth
 
+export type AuthInputType = {
+    loginOrEmail: string,
+    password: string,
+}
+//TYPE for users
+export type QueryTypeViewUsers = {
+    searchLoginTerm: string | null;
+    searchEmailTerm: string | null;
+    sortBy: string;
+    sortDirection: string;
+    pageSize: number;
+    pageNumber: number;
+}
+
+export type NewUserType = {
+    id: string,
+    userName: string,
+    email: string,
+    passwordHash: string,
+    passwordSalt: string,
+    createdAt: string
+}
+export interface  ExtendsQueryParamsInput extends QueryParamsInput {
+    searchLoginTerm?: string,
+    searchEmailTerm?: string,
+}
+
+export type UserInputType = {
+    login: string,
+    password: string,
+    email: string
+}
+
+export type UserViewType = {
+    id: string,
+    login: string,
+    email: string,
+    createdAt:string
+}
 //TYPE FOR POSTS
 
 //GET
