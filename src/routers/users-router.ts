@@ -6,6 +6,7 @@ import {usersService} from "../domain (business layer)/users-service";
 import {HTTP_STATUSES} from "../types/statutes";
 import {sortQueryParamsUsers} from "./helpers/helpers-posts-blogs";
 import {authGuardMiddleware} from "../middleware/authGuardMiddleware";
+import {ErrorsValidation} from "../middleware/errorsValidation";
 
 
 export const usersRouter = Router({})
@@ -26,6 +27,7 @@ usersRouter.post(
     '/',
     authGuardMiddleware,
     AuthValidation(),
+    ErrorsValidation,
     async (req: RequestWithBody<UserInputType>, res: Response<UserViewType>) => {
 
         const createdUser = await usersService.createUser({ login: req.body.login, email: req.body.email, password: req.body.password} )

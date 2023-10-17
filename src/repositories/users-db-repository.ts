@@ -29,7 +29,7 @@ export const usersRepository = {
             .limit(pageSize)
             .toArray()
 
-        const totalCount = await dbCollectionUser.countDocuments()
+        const totalCount = await dbCollectionUser.countDocuments(query)
         const pagesCount = Math.ceil(totalCount/ pageSize)
 
 

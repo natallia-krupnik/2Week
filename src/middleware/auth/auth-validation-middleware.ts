@@ -22,6 +22,7 @@ export const AuthValidation = ()=> {
             .isString()
             .trim()
             .isEmail()
+            .matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
             .withMessage('Invalid email'),
     ]
 }
