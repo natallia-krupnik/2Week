@@ -12,7 +12,6 @@ export const authRouter = Router({})
 authRouter.post(
     '/login',
     AuthValid(),
-    ErrorsValidation,
     async (req: RequestWithBody<AuthInputType>, res: Response) => {
 
         const checkResult = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password)
