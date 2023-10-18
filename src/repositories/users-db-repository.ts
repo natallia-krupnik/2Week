@@ -87,11 +87,10 @@ export const usersRepository = {
     },
 
     async findUserByLoginOrEmail(loginOrEmail: string){
-        return await dbCollectionUser.findOne({$or: [{email: loginOrEmail}, {userName: loginOrEmail}]})
+        return await dbCollectionUser.findOne({$or: [{email: loginOrEmail}, {login: loginOrEmail}]})
     },
 
     async deleteUserById(id: string) {
-        //if(!ObjectId.isValid(id)) return null
 
         const result = await dbCollectionUser.deleteOne({id: id})
 
