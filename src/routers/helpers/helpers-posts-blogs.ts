@@ -62,8 +62,6 @@ export  const sortQueryParamsUsers = (query: ExtendsQueryParamsInput): QueryType
         sortDirection: 'desc',
         pageSize: 10,
         pageNumber: 1,
-        searchEmailTerm: null,
-        searchLoginTerm: null
     }
 
     if(query.sortBy) {
