@@ -16,10 +16,10 @@ export const usersRepository = {
 
         const query: any = {}
         if(searchLoginTerm) {
-            return query.login = {$regex: searchLoginTerm, $options: 'i'}
+            query.login = {$regex: searchLoginTerm, $options: 'i'}
         }
         if(searchEmailTerm) {
-            return query.email = {$regex: searchEmailTerm, $options: 'i'}
+            query.email = {$regex: searchEmailTerm, $options: 'i'}
         }
 
         const users = await dbCollectionUser
@@ -40,7 +40,7 @@ export const usersRepository = {
             totalCount,
             items: users.map(user => ({
                 id: user.id.toString(),
-                login: user.userName,
+                login: user.login,
                 email: user.email,
                 createdAt: user.createdAt
             }))
