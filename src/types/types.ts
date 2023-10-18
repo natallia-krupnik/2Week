@@ -7,8 +7,8 @@ export type AuthInputType = {
 }
 //TYPE for users
 export type QueryTypeViewUsers = {
-    searchLoginTerm: string | null;
-    searchEmailTerm: string | null;
+    searchLoginTerm?: string;
+    searchEmailTerm?: string;
     sortBy: string;
     sortDirection: string;
     pageSize: number;

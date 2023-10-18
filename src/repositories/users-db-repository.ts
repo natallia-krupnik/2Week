@@ -1,4 +1,4 @@
-import {NewUserType, QueryTypeViewUsers} from "../types/types";
+import {NewUserType, QueryTypeViewUsers, UserInputType} from "../types/types";
 import {dbCollectionBlog, dbCollectionUser} from "../db/db";
 import {ObjectId} from "mongodb";
 
@@ -6,34 +6,45 @@ type Blog = {
     [key: string]: any
 }
 
+type QueryRegex = {
+    $regex: string,
+    $options: string
+}
+
+function prepareQuery ({ searchEmailTerm, searchLoginTerm }:QueryTypeViewUsers)  {
+
+    const or: Partial<Record<keyof UserInputType, QueryRegex>>[] = []
+
+    if(searchLoginTerm) {
+        or.push({login: {$regex: searchLoginTerm, $options: 'i'}})
+    }
+    if(searchEmailTerm) {
+        or.push({email: {$regex: searchEmailTerm, $options: 'i'} })
+    }
+
+    return or.length > 0 ? {$or: or} : {}
+}
+
 export const usersRepository = {
     async getAllUsers (defaultQuery: QueryTypeViewUsers) {
-        const { sortBy, sortDirection, pageNumber, pageSize, searchLoginTerm, searchEmailTerm } = defaultQuery
+        const { sortBy, sortDirection, pageNumber, pageSize } = defaultQuery
         const skip = (pageNumber -1) * pageSize
 
         const sort: Blog = {}
         sort[sortBy] = sortDirection === 'desc'? -1: 1
 
-        let query: any = []
-        if(searchLoginTerm) {
-            const login = {$regex: searchLoginTerm, $options: 'i'}
-            query = [...query, {login: login}]
-        }
-        if(searchEmailTerm) {
-            const email = {$regex: searchEmailTerm, $options: 'i'}
-            query = [...query, {email: email}]
-        }
+        let query = prepareQuery(defaultQuery)
 
         console.log(query, 'query')
 
         const users = await dbCollectionUser
-            .find({$or: query})
+            .find(query)
             .sort(sort)
             .skip(skip)
             .limit(pageSize)
             .toArray()
 
-        const totalCount = await dbCollectionUser.countDocuments({$or: query})
+        const totalCount = await dbCollectionUser.countDocuments(query)
         const pagesCount = Math.ceil(totalCount/ pageSize)
 
 
