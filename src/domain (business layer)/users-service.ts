@@ -1,15 +1,16 @@
 import {NewUserType, QueryTypeViewUsers, UserInputType, UserViewType} from "../types/types";
 import {usersRepository} from "../repositories/users-db-repository";
 import bcrypt from 'bcrypt'
+import {blogsRepository} from "../repositories/blogs-db-repository";
 
-function mapUserToView(userFromDb: NewUserType): UserViewType {
-    return {
-        id: userFromDb.id,
-        login: userFromDb.userName,
-        email: userFromDb.email,
-        createdAt: userFromDb.createdAt,
-    }
-}
+// function mapUserToView(userFromDb: NewUserType): UserViewType {
+//     return {
+//         id: userFromDb.id,
+//         login: userFromDb.userName,
+//         email: userFromDb.email,
+//         createdAt: userFromDb.createdAt,
+//     }
+// }
 export const usersService = {
 
     async getAllUsers(defaultQuery: QueryTypeViewUsers) {
@@ -32,7 +33,13 @@ export const usersService = {
         }
         await usersRepository.createUser(newUser)
 
-        return mapUserToView(newUser)
+        // return mapUserToView(newUser)
+        return {
+            id: newUser.id,
+            login: newUser.userName,
+            email: newUser.email,
+            createdAt: newUser.createdAt,
+        }
     },
 
     async findUserById(id: string) {
@@ -60,5 +67,9 @@ export const usersService = {
         const hash = await bcrypt.hash(password, passwordSalt)
         console.log('hash:' + hash)
         return hash
+    },
+
+    async deleteAllUsers() {
+        return await usersRepository.deleteAllUsers()
     }
 }

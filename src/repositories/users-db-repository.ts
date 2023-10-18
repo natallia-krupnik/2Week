@@ -1,5 +1,5 @@
 import {NewUserType, QueryTypeViewUsers} from "../types/types";
-import {dbCollectionUser} from "../db/db";
+import {dbCollectionBlog, dbCollectionUser} from "../db/db";
 import {ObjectId} from "mongodb";
 
 type Blog = {
@@ -29,7 +29,7 @@ export const usersRepository = {
             .limit(pageSize)
             .toArray()
 
-        const totalCount = await dbCollectionUser.countDocuments()
+        const totalCount = await dbCollectionUser.countDocuments(query)
         const pagesCount = Math.ceil(totalCount/ pageSize)
 
 
@@ -39,7 +39,7 @@ export const usersRepository = {
             pageSize,
             totalCount,
             items: users.map(user => ({
-                id: user._id.toString(),
+                id: user.id.toString(),
                 login: user.userName,
                 email: user.email,
                 createdAt: user.createdAt
@@ -53,11 +53,22 @@ export const usersRepository = {
     },
 
     async findUserById(id: string) {
-        const user = await dbCollectionUser.findOne({_id: new ObjectId(id)})
+        const user = await dbCollectionUser.findOne({id: id})
+        console.log(user, 'user')
         if (!user) {
             return null
         }
         return user
+    },
+
+    async findExistedEmail(value: string) {
+        return await dbCollectionUser.findOne({email: value})
+
+    },
+
+    async findExistedLogin(value:string) {
+        return await dbCollectionUser.findOne({login: value})
+
     },
 
     async findUserByLoginOrEmail(loginOrEmail: string){
@@ -65,13 +76,19 @@ export const usersRepository = {
     },
 
     async deleteUserById(id: string) {
-        if(!ObjectId.isValid(id)) return null
+        //if(!ObjectId.isValid(id)) return null
 
-        const result = await dbCollectionUser.deleteOne({_id: new ObjectId(id)})
+        const result = await dbCollectionUser.deleteOne({id: id})
 
         if(result.deletedCount === 0){
-            false
+            return false
         }
         return true
+    },
+
+    async deleteAllUsers() {
+        const resul = await dbCollectionUser.deleteMany({})
+
+        return resul.deletedCount > 0
     }
 }
