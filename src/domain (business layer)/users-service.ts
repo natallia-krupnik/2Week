@@ -1,6 +1,7 @@
 import {NewUserType, QueryTypeViewUsers, UserInputType, UserViewType} from "../types/types";
 import {usersRepository} from "../repositories/users-db-repository";
 import bcrypt from 'bcrypt'
+import {blogsRepository} from "../repositories/blogs-db-repository";
 
 // function mapUserToView(userFromDb: NewUserType): UserViewType {
 //     return {
@@ -66,5 +67,9 @@ export const usersService = {
         const hash = await bcrypt.hash(password, passwordSalt)
         console.log('hash:' + hash)
         return hash
+    },
+
+    async deleteAllUsers() {
+        return await usersRepository.deleteAllUsers()
     }
 }

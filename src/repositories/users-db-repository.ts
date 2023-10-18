@@ -1,5 +1,5 @@
 import {NewUserType, QueryTypeViewUsers} from "../types/types";
-import {dbCollectionUser} from "../db/db";
+import {dbCollectionBlog, dbCollectionUser} from "../db/db";
 import {ObjectId} from "mongodb";
 
 type Blog = {
@@ -73,5 +73,11 @@ export const usersRepository = {
             false
         }
         return true
+    },
+
+    async deleteAllUsers() {
+        const resul = await dbCollectionUser.deleteMany({})
+
+        return resul.deletedCount > 0
     }
 }
