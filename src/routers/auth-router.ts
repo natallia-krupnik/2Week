@@ -11,7 +11,7 @@ export const authRouter = Router({})
 
 authRouter.post(
     '/login',
-    AuthValidation(),
+    AuthValid(),
     ErrorsValidation,
     async (req: RequestWithBody<AuthInputType>, res: Response) => {
 
