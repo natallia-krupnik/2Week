@@ -14,22 +14,26 @@ export const usersRepository = {
         const sort: Blog = {}
         sort[sortBy] = sortDirection === 'desc'? -1: 1
 
-        const query: any = {}
+        let query: any = []
         if(searchLoginTerm) {
-            query.login = {$regex: searchLoginTerm, $options: 'i'}
+            const login = {$regex: searchLoginTerm, $options: 'i'}
+            query = [...query, {login: login}]
         }
         if(searchEmailTerm) {
-            query.email = {$regex: searchEmailTerm, $options: 'i'}
+            const email = {$regex: searchEmailTerm, $options: 'i'}
+            query = [...query, {email: email}]
         }
 
+        console.log(query, 'query')
+
         const users = await dbCollectionUser
-            .find(query)
+            .find({$or: query})
             .sort(sort)
             .skip(skip)
             .limit(pageSize)
             .toArray()
 
-        const totalCount = await dbCollectionUser.countDocuments(query)
+        const totalCount = await dbCollectionUser.countDocuments({$or: query})
         const pagesCount = Math.ceil(totalCount/ pageSize)
 
 
