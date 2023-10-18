@@ -52,6 +52,9 @@ export const AuthValid = ()=> {
             .isString()
             .trim()
             .isLength({min:1})
+            .custom( async(value) => {
+
+            })
             .withMessage('Invalid loginOrEmail'),
 
         body('password')
