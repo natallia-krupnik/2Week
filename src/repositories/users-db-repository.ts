@@ -39,7 +39,7 @@ export const usersRepository = {
             pageSize,
             totalCount,
             items: users.map(user => ({
-                id: user._id.toString(),
+                id: user.id.toString(),
                 login: user.userName,
                 email: user.email,
                 createdAt: user.createdAt
@@ -54,6 +54,7 @@ export const usersRepository = {
 
     async findUserById(id: string) {
         const user = await dbCollectionUser.findOne({id: id})
+        console.log(user, 'user')
         if (!user) {
             return null
         }
