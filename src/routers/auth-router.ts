@@ -4,6 +4,7 @@ import {AuthInputType} from "../types/types";
 import {HTTP_STATUSES} from "../types/statutes";
 import {usersService} from "../domain (business layer)/users-service";
 import {AuthValid} from "../middleware/auth/auth-validation-middleware";
+import {ErrorsValidation} from "../middleware/errorsValidation";
 
 
 export const authRouter = Router({})
@@ -11,6 +12,7 @@ export const authRouter = Router({})
 authRouter.post(
     '/login',
     AuthValid(),
+    ErrorsValidation,
     async (req: RequestWithBody<AuthInputType>, res: Response) => {
 
         const checkResult = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password)
