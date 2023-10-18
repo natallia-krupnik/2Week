@@ -53,7 +53,7 @@ export const usersRepository = {
     },
 
     async findUserById(id: string) {
-        const user = await dbCollectionUser.findOne({_id: new ObjectId(id)})
+        const user = await dbCollectionUser.findOne({id: id})
         if (!user) {
             return null
         }
@@ -75,12 +75,12 @@ export const usersRepository = {
     },
 
     async deleteUserById(id: string) {
-        if(!ObjectId.isValid(id)) return null
+        //if(!ObjectId.isValid(id)) return null
 
-        const result = await dbCollectionUser.deleteOne({_id: new ObjectId(id)})
+        const result = await dbCollectionUser.deleteOne({id: id})
 
         if(result.deletedCount === 0){
-            false
+            return false
         }
         return true
     },
