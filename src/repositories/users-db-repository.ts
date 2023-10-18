@@ -60,6 +60,16 @@ export const usersRepository = {
         return user
     },
 
+    async findExistedEmail(value: string) {
+        return await dbCollectionUser.findOne({email: value})
+
+    },
+
+    async findExistedLogin(value:string) {
+        return await dbCollectionUser.findOne({login: value})
+
+    },
+
     async findUserByLoginOrEmail(loginOrEmail: string){
         return await dbCollectionUser.findOne({$or: [{email: loginOrEmail}, {userName: loginOrEmail}]})
     },
