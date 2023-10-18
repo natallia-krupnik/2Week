@@ -25,7 +25,7 @@ export const usersService = {
 
         const newUser: NewUserType = {
             id: new Date().getTime().toString(),
-            userName: login,
+            login,
             email,
             passwordHash,
             passwordSalt,
@@ -36,7 +36,7 @@ export const usersService = {
         // return mapUserToView(newUser)
         return {
             id: newUser.id,
-            login: newUser.userName,
+            login: newUser.login,
             email: newUser.email,
             createdAt: newUser.createdAt,
         }
