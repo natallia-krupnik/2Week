@@ -1,11 +1,11 @@
-import {CreateInputData, PostType, PostViewType, QueryTypeView} from "../types/types";
+import {CreateInputData, PostType, PostViewType, QueryType} from "../types/types";
 import {blogsRepository} from "../repositories/blogs-db-repository";
 import {postsRepository} from "../repositories/posts-db-repository";
 
 
 export const postsService = {
 
-    async getAllPosts (defaultResult:QueryTypeView, blogId?:string) {
+    async getAllPosts (defaultResult:QueryType, blogId?:string) {
         return await postsRepository.getAllPosts(defaultResult, blogId)
     },
 

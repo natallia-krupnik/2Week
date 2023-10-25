@@ -1,15 +1,14 @@
 import { Response, Router} from "express"
 import {RequestWithParams, RequestWithBody} from "../types/requests"
 import {HTTP_STATUSES} from "../types/statutes"
-import {authGuardMiddleware} from "../middleware/authGuardMiddleware"
+import {BaseAuthMiddleware} from "../middleware/baseAuthMiddleware"
 import {ValidateBlog} from "../middleware/blog/blog-validation-middleware";
 import {ErrorsValidation} from "../middleware/errorsValidation";
 import {blogsService} from "../domain (business layer)/blogs-service";
-import {QueryParamsBlogsInput, QueryTypeView, QueryTypeViewBlogs} from "../types/types";
+import {QueryParamsBlogsInput, QueryType, QueryTypeViewBlogs} from "../types/types";
 import {postsService} from "../domain (business layer)/posts-service";
 import {sortQueryParams, sortQueryParamsBlogs} from "./helpers/helpers-posts-blogs";
 import {ValidatePostWithoutBlogId} from "../middleware/post/post-validation-middleware";
-import {blogsRepository} from "../repositories/blogs-db-repository";
 
 export const blogsRouter = Router({})
 
@@ -25,7 +24,7 @@ blogsRouter.get(
 
 blogsRouter.post(
     '/',
-    authGuardMiddleware,
+    BaseAuthMiddleware,
     ValidateBlog(),
     ErrorsValidation,
     async (req: RequestWithBody<{
@@ -50,14 +49,13 @@ blogsRouter.get(
             blogId: string
         }>, res: Response) => {
 
-        //где должна быть эта проверка. Тут или в service
         const blogById = await blogsService.findBlogById(req.params.blogId)
         if(!blogById) {
             res.sendStatus(HTTP_STATUSES.not_found_404)
             return
         }
 
-        const defaultResult: QueryTypeView = sortQueryParams(req.query)
+        const defaultResult: QueryType = sortQueryParams(req.query)
 
         const allPostsForBlog = await postsService.getAllPosts(defaultResult, req.params.blogId)
 
@@ -67,7 +65,7 @@ blogsRouter.get(
 // create Post for Blog with ID
 blogsRouter.post(
     '/:blogId/posts',
-    authGuardMiddleware,
+    BaseAuthMiddleware,
     ValidatePostWithoutBlogId(),
     ErrorsValidation,
     async (req: RequestWithParams<{ blogId: string }>
@@ -90,7 +88,6 @@ blogsRouter.get(
     '/:id',
     async (req: RequestWithParams<{ id: string }>, res: Response) => {
 
-    //где должна быть эта проверка. Тут или в service
     const blogByID = await blogsService.findBlogById(req.params.id)
     if(!blogByID) {
         res.status(HTTP_STATUSES.not_found_404).send('Not found')
@@ -101,7 +98,7 @@ blogsRouter.get(
 
 blogsRouter.put(
     '/:id',
-    authGuardMiddleware,
+    BaseAuthMiddleware,
     ValidateBlog(),
     ErrorsValidation,
     async (req: RequestWithParams<{
@@ -129,7 +126,7 @@ blogsRouter.put(
 
 blogsRouter.delete(
     '/:id',
-    authGuardMiddleware,
+    BaseAuthMiddleware,
     async (req:RequestWithParams<{ id:string }>, res:Response) =>{
         const id = req.params.id
 

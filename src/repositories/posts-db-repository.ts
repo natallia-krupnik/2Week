@@ -1,4 +1,4 @@
-import {PostType, PostViewType, QueryTypeView} from "../types/types";
+import {PostType, PostViewType, QueryType} from "../types/types";
 import { dbCollectionPost } from "../db/db";
 import { ObjectId } from "mongodb";
 
@@ -8,7 +8,7 @@ type Test = {
 
 export const postsRepository = {
 
-    async getAllPosts (defaultResult: QueryTypeView, blogId?: string) {
+    async getAllPosts (defaultResult: QueryType, blogId?: string) {
     const{pageNumber, pageSize, sortBy, sortDirection} = defaultResult
         const skip = (pageNumber -1) * pageSize
         const sort: Test = {}
@@ -61,7 +61,7 @@ export const postsRepository = {
 
     async createPost (newPost: PostType): Promise<PostViewType> {
 
-        const res = await dbCollectionPost.insertOne((newPost))
+        const res = await dbCollectionPost.insertOne(newPost)
 
         return {
             id: res.insertedId.toString(),

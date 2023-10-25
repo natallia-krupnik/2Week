@@ -45,7 +45,7 @@ export const AuthValidation = ()=> {
     ]
 }
 
-export const AuthValid = ()=> {
+export const AuthBodyValidation = ()=> {
     return [
         body('loginOrEmail')
             .notEmpty()

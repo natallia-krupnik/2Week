@@ -4,16 +4,16 @@ import {ExtendsQueryParamsInput, UserInputType, UserViewType} from "../types/typ
 import {AuthValidation} from "../middleware/auth/auth-validation-middleware";
 import {usersService} from "../domain (business layer)/users-service";
 import {HTTP_STATUSES} from "../types/statutes";
-import {sortQueryParamsUsers} from "./helpers/helpers-posts-blogs";
-import {authGuardMiddleware} from "../middleware/authGuardMiddleware";
+import {BaseAuthMiddleware} from "../middleware/baseAuthMiddleware";
 import {ErrorsValidation} from "../middleware/errorsValidation";
+import {sortQueryParamsUsers} from "./helpers/helpers-users";
 
 
 export const usersRouter = Router({})
 
 usersRouter.get (
     '/',
-    authGuardMiddleware,
+    BaseAuthMiddleware,
     async (req:RequestWithParams<ExtendsQueryParamsInput>,
                     res:Response) => {
     const defaultQuery = sortQueryParamsUsers(req.query)
@@ -25,7 +25,7 @@ usersRouter.get (
 
 usersRouter.post(
     '/',
-    authGuardMiddleware,
+    BaseAuthMiddleware,
     AuthValidation(),
     ErrorsValidation,
     async (req: RequestWithBody<UserInputType>, res: Response<UserViewType>) => {
@@ -40,7 +40,7 @@ usersRouter.post(
 
 usersRouter.delete(
     '/:id',
-    authGuardMiddleware,
+    BaseAuthMiddleware,
     async (req: Request<{id: string}>, res: Response) => {
         const id = req.params.id
 

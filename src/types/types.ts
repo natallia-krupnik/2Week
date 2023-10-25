@@ -49,7 +49,7 @@ export interface QueryParamsInput {
     sortBy?: string,
     sortDirection?: string
 }
-export type QueryTypeView = {
+export type QueryType = {
     sortBy: string;
     sortDirection: string;
     pageSize: number;
