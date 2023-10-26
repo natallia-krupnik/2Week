@@ -23,18 +23,17 @@ export const usersService = {
         const passwordHash = await this._generateHash(password, passwordSalt)
 
         const newUser: NewUserType = {
-            id: new Date().getTime().toString(),
             login,
             email,
             passwordHash,
             passwordSalt,
             createdAt: new Date().toISOString()
         }
-        await usersRepository.createUser(newUser)
 
-        // return mapUserToView(newUser)
+        const res = await usersRepository.createUser({...newUser})
+
         return {
-            id: newUser.id,
+            id: res.insertedId.toString(),
             login: newUser.login,
             email: newUser.email,
             createdAt: newUser.createdAt,
@@ -51,14 +50,18 @@ export const usersService = {
 
     async checkCredentials(loginOrEmail: string, password: string) {
         const user = await usersRepository.findUserByLoginOrEmail(loginOrEmail)
+
         if (!user) {
-            return false
+            return null
         }
+
         const passwordHash = await this._generateHash(password, user.passwordSalt)
+
         if (user.passwordHash != passwordHash) {
-            return false
+            return null
         }
-        return true
+
+        return user
     },
 
     async _generateHash(password: string, passwordSalt: string) {

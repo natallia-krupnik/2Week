@@ -54,7 +54,7 @@ export const usersRepository = {
             pageSize,
             totalCount,
             items: users.map(user => ({
-                id: user.id.toString(),
+                id: user._id.toString(),
                 login: user.login,
                 email: user.email,
                 createdAt: user.createdAt
@@ -63,13 +63,12 @@ export const usersRepository = {
     },
 
     async createUser(newUser: NewUserType){
-        await dbCollectionUser.insertOne(newUser);
-        return newUser
-    },
+        return await dbCollectionUser.insertOne(newUser);
+    },// тут возвраш только id созданного элемента
 
     async findUserById(id: string) {
-        const user = await dbCollectionUser.findOne({id: id})
-        console.log(user, 'user')
+        const user = await dbCollectionUser.findOne({_id: new ObjectId(id)})
+
         if (!user) {
             return null
         }
@@ -92,7 +91,7 @@ export const usersRepository = {
 
     async deleteUserById(id: string) {
 
-        const result = await dbCollectionUser.deleteOne({id: id})
+        const result = await dbCollectionUser.deleteOne({_id: new ObjectId(id)})
 
         if(result.deletedCount === 0){
             return false

@@ -15,9 +15,6 @@ export const dbCollectionPost = db.collection <PostType> ('posts')
 
 export const dbCollectionUser = db.collection<NewUserType>('users')
 
-
-
-
 export async function runDb(){
     try {
         // Connect the client to the server

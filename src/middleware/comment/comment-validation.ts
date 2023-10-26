@@ -8,7 +8,7 @@ export const CommentValidation = ()=> {
             .isString()
             .trim()
             .isLength({min:20, max:300})
-            .withMessage('Invalid password'),
+            .withMessage('Invalid content'),
 
     ]
 }

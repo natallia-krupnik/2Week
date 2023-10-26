@@ -16,7 +16,6 @@ export type QueryTypeViewUsers = {
 }
 
 export type NewUserType = {
-    id: string,
     login: string,
     email: string,
     passwordHash: string,

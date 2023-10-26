@@ -17,18 +17,29 @@ export const BearerAuthMiddleware = async (
     next: NextFunction) => {
 
     const authString = req.headers.authorization
+
+    console.log(authString, 'authString')
     if(!authString) {
-        res.status(HTTP_STATUSES.unauthorized_401)
+        res.sendStatus(HTTP_STATUSES.unauthorized_401)
         return
     }
 
     const token = authString.split(' ')[1]
-    const userId = await jwtService.getUserIdByToken(token)
 
-    if(userId){
-        const userIdString = userId.toString()
-        req.user = await usersService.findUserById(userIdString)
-        next()
+    console.log(token, 'token')
+    const jwtData = await jwtService.getUserIdByToken(token)
+
+    console.log(jwtData, 'jwtData')
+
+    if(jwtData){
+        const userIdString = jwtData.userId.toString()
+        const user = await usersService.findUserById(userIdString)
+
+        console.log(user, 'user')
+        if(user){
+            req.user = user
+            return next()
+        }
     }
-    res.status(HTTP_STATUSES.unauthorized_401)
+    res.sendStatus(HTTP_STATUSES.unauthorized_401)
 }

@@ -28,10 +28,9 @@ export const commentsService = {
     },
 
     async createComment(inputData: NewCommentInput): Promise<NewCommentViewType> {
-        const { content, userId} = inputData // как достать user id
+        const { content, userId} = inputData
 
         const user = await usersRepository.findUserById(userId)
-
         if(!user){
             throw new Error('User is not exist')
         }
@@ -39,15 +38,23 @@ export const commentsService = {
         const newComment: NewCommentDB = {
             content,
             commentatorInfo: {
-                userId,
+                userId: user.id,
                 userLogin: user.login
             },
             createdAt: new Date().toISOString()
         }
 
-        const newCommentId = await  commentsDbRepository.createComment(newComment)
+        // const newCommentId = await  commentsDbRepository.createComment(newComment)
+        //
+        // return {...newComment, id:newCommentId}
+        const id = await commentsDbRepository.createComment(newComment)
 
-        return {...newComment, id:newCommentId}
+        return {
+            id,
+            content: newComment.content,
+            commentatorInfo: newComment.commentatorInfo,
+            createdAt: newComment.createdAt
+        }
     },
 
     async deleteAllComments() {

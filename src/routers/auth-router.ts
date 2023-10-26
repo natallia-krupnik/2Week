@@ -16,12 +16,13 @@ authRouter.post(
     AuthBodyValidation(),
     ErrorsValidation,
     async (req: RequestWithBody<AuthInputType>, res: Response) => {
-
         const user = await usersService.checkCredentials(req.body.loginOrEmail, req.body.password)
 
         if (user) {
+
+            console.log(user, 'user')
             const token = await jwtService.createJWT(user)
-            return res.status(HTTP_STATUSES.created_201).send(token)
+            return res.status(HTTP_STATUSES.ok_200).send(token)
         }
 
         return res.sendStatus(HTTP_STATUSES.unauthorized_401)
