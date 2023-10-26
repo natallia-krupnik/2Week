@@ -20,7 +20,7 @@ commentsRouter.put(
 
             res: Response) => {
 
-        const userId = req.user.id
+        const userId = req.user._id
         const comment = await commentsService.findCommentById(req.params.id)
 
         if(comment){
@@ -50,7 +50,7 @@ commentsRouter.delete(
     async (req: RequestWithParams<{ id: string }>, res: Response) => {
         const id  = req.params.id
 
-        const userId = req.user.id
+        const userId = req.user._id
         const comment = await commentsService.findCommentById(id)
 
         if(!comment) {
@@ -66,8 +66,10 @@ commentsRouter.delete(
         }
 
         const commentIsDeleted = await commentsService.deleteCommentById(id)
+
         if(!commentIsDeleted) {
             res.sendStatus(HTTP_STATUSES.not_found_404)
+            return
         }
 
         return res.sendStatus(HTTP_STATUSES.no_content_204)

@@ -38,7 +38,7 @@ export const commentsService = {
         const newComment: NewCommentDB = {
             content,
             commentatorInfo: {
-                userId: user.id,
+                userId: user._id.toString(),
                 userLogin: user.login
             },
             createdAt: new Date().toISOString()

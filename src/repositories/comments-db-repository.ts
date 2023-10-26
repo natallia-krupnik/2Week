@@ -30,10 +30,7 @@ export const commentsDbRepository = {
     async deleteCommentById(id: string) {
         const result = await dbCollectionComments.deleteOne({_id: new ObjectId(id)})
 
-        if(result.deletedCount === 0) {
-            return false
-        }
-        return true
+        return result.deletedCount === 1
     },
 
     async findCommentById(id: string): Promise<NewCommentViewType> {
@@ -41,16 +38,13 @@ export const commentsDbRepository = {
         const comment = await dbCollectionComments.findOne({_id: new ObjectId(id)})
 
         if(!comment){
-            throw new Error('User is not exist')
+            throw new Error('Comment is not exist')
         }
 
         return {
             id: comment._id.toString(),
             content: comment.content,
-            commentatorInfo: {
-                userId: comment.commentatorInfo.userId,
-                userLogin: comment.commentatorInfo.userLogin,
-            },
+            commentatorInfo: comment.commentatorInfo,
             createdAt: comment.createdAt
         }
     },
