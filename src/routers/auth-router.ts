@@ -46,6 +46,6 @@ authRouter.get(
         return res.status(HTTP_STATUSES.ok_200).send({
             email: user.email,
             login: user.login,
-            userId: user.id
+            userId: user._id
         })
     })
