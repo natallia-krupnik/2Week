@@ -22,7 +22,7 @@ authRouter.post(
 
             console.log(user, 'user')
             const token = await jwtService.createJWT(user)
-            return res.status(HTTP_STATUSES.ok_200).send(token)
+            return res.status(HTTP_STATUSES.ok_200).send({accessToken: token})
         }
 
         return res.sendStatus(HTTP_STATUSES.unauthorized_401)
