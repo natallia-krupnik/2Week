@@ -27,8 +27,8 @@ export const commentsDbRepository = {
         return result.matchedCount === 1
     },
 
-    async deleteCommentById(id: string) {
-        const result = await dbCollectionComments.deleteOne({_id: new ObjectId(id)})
+    async deleteCommentById(commentId: string) {
+        const result = await dbCollectionComments.deleteOne({_id: new ObjectId(commentId)})
 
         return result.deletedCount === 1
     },

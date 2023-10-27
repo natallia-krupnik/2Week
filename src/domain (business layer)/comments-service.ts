@@ -15,8 +15,8 @@ export const commentsService = {
         return await commentsDbRepository.updatedCommentById(commentId, content)
     },
 
-    async deleteCommentById(id: string){
-        return await commentsDbRepository.deleteCommentById(id)
+    async deleteCommentById(commentId: string){
+        return await commentsDbRepository.deleteCommentById(commentId)
     },
 
     async findCommentById(id: string) {

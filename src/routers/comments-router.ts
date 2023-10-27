@@ -50,10 +50,11 @@ commentsRouter.delete(
     '/:id',
     BearerAuthMiddleware,
     async (req: RequestWithParams<{ id: string }>, res: Response) => {
-        const id  = req.params.id
 
         const userId = req.user._id.toString()
-        const comment = await commentsService.findCommentById(id)
+
+        const commentId  = req.params.id
+        const comment = await commentsService.findCommentById(commentId)
 
         if(!comment) {
             res.sendStatus(HTTP_STATUSES.not_found_404)
@@ -67,7 +68,7 @@ commentsRouter.delete(
             }
         }
 
-        const commentIsDeleted = await commentsService.deleteCommentById(id)
+        const commentIsDeleted = await commentsService.deleteCommentById(commentId)
 
         if(!commentIsDeleted) {
             res.sendStatus(HTTP_STATUSES.not_found_404)
@@ -85,8 +86,8 @@ commentsRouter.get(
 
         const commentById = await commentsService.findCommentById(req.params.id)
         if(!commentById) {
-            res.status(HTTP_STATUSES.not_found_404)
-            return  // почему тут return
+            res.sendStatus(HTTP_STATUSES.not_found_404)
+            return
         }
         res.status(HTTP_STATUSES.ok_200).send(commentById)
     }
