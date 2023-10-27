@@ -28,7 +28,7 @@ export const commentsService = {
     },
 
     async createComment(inputData: NewCommentInput): Promise<NewCommentViewType> {
-        const { content, userId} = inputData
+        const { content, userId, postId} = inputData
 
         const user = await usersRepository.findUserById(userId)
         if(!user){
@@ -36,6 +36,7 @@ export const commentsService = {
         }
 
         const newComment: NewCommentDB = {
+            postId,
             content,
             commentatorInfo: {
                 userId: user._id.toString(),
@@ -44,9 +45,6 @@ export const commentsService = {
             createdAt: new Date().toISOString()
         }
 
-        // const newCommentId = await  commentsDbRepository.createComment(newComment)
-        //
-        // return {...newComment, id:newCommentId}
         const id = await commentsDbRepository.createComment(newComment)
 
         return {

@@ -53,7 +53,7 @@ postsRouter.post(
 
         const userId = req.user._id
 
-        const newCreatedComment = await commentsService.createComment({...req.body, userId})
+        const newCreatedComment = await commentsService.createComment({content:req.body.content, userId, postId:req.params.postId})
         if(!newCreatedComment) return res.sendStatus(HTTP_STATUSES.not_found_404)
 
         return res.status(HTTP_STATUSES.created_201).send(newCreatedComment)

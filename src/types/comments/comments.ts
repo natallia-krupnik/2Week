@@ -2,6 +2,7 @@ import {ObjectId} from "mongodb";
 
 
 export type NewCommentInput = {
+    postId: string,
     userId: string,
     content: string
 }
@@ -24,6 +25,7 @@ export type CommitQuery = {
 }
 
 export type NewCommentDB = {
+    postId:string,
     content: string,
     commentatorInfo: {
         userId: string,

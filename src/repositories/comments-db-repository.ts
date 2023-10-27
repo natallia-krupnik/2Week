@@ -83,19 +83,9 @@ export const commentsDbRepository = {
     },
 
     async createComment(newComment: NewCommentDB): Promise<string> {
-        const result = await dbCollectionComments.insertOne(newComment)
+        const resultId = await dbCollectionComments.insertOne(newComment)
 
-        return result.insertedId.toString()
-
-        // return {
-        //     id: result.insertedId.toString(),
-        //     content: newComment.content,
-        //     commentatorInfo: {
-        //         userId: user.id.toString(),
-        //         userLogin: user.login,
-        //     },
-        //     createdAt: newComment.createdAt
-        // }
+        return resultId.insertedId.toString()
     },
 
     async deleteAllComments(){
