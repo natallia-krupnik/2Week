@@ -23,7 +23,7 @@ export const commentsService = {
         return await commentsDbRepository.findCommentById(id)
     },
 
-    async getAllComments(defaultResult: CommitQuery, postId?: string) {
+    async getAllComments(defaultResult: CommitQuery, postId: string) {
         return await commentsDbRepository.getAllComments(defaultResult, postId)
     },
 

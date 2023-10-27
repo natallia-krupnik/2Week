@@ -49,7 +49,7 @@ export const commentsDbRepository = {
         }
     },
 
-    async getAllComments(defaultResult: CommitQuery, postId?: string){
+    async getAllComments(defaultResult: CommitQuery, postId: string){
         const {pageNumber, pageSize, sortBy, sortDirection} = defaultResult
         const skip = (pageNumber -1) * pageSize
         const sort: Test = {}

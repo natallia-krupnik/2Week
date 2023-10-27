@@ -20,7 +20,7 @@ commentsRouter.put(
 
             res: Response) => {
 
-        const userId = req.user._id
+        const userId = req.user.id
         const comment = await commentsService.findCommentById(req.params.id)
 
         if(comment){
@@ -50,7 +50,7 @@ commentsRouter.delete(
     async (req: RequestWithParams<{ id: string }>, res: Response) => {
         const id  = req.params.id
 
-        const userId = req.user._id
+        const userId = req.user.id
         const comment = await commentsService.findCommentById(id)
 
         if(!comment) {
