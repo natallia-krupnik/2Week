@@ -33,12 +33,12 @@ export const commentsDbRepository = {
         return result.deletedCount === 1
     },
 
-    async findCommentById(id: string): Promise<NewCommentViewType> {
-        // нужна тут проверка на id?
+    async findCommentById(id: string) {
+
         const comment = await dbCollectionComments.findOne({_id: new ObjectId(id)})
 
         if(!comment){
-            throw new Error('Comment is not exist')
+            return null
         }
 
         return {
