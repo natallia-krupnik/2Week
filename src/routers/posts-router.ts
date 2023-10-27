@@ -51,7 +51,7 @@ postsRouter.post(
         const postId = await postsService.findPostByID(req.params.postId)
         if(!postId)  return res.sendStatus(HTTP_STATUSES.not_found_404)
 
-        const userId = req.user.id
+        const userId = req.user._id
 
         const newCreatedComment = await commentsService.createComment({...req.body, userId})
         if(!newCreatedComment) return res.sendStatus(HTTP_STATUSES.not_found_404)

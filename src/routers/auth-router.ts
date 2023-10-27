@@ -34,7 +34,7 @@ authRouter.get(
     BearerAuthMiddleware,
     async (req: Request, res: Response) => {
 
-        const userId = req.user.id //правильно?
+        const userId = req.user._id //правильно?
         if (!userId) {
             return res.sendStatus(HTTP_STATUSES.unauthorized_401)
         }
