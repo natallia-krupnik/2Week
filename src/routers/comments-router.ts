@@ -6,6 +6,7 @@ import {HTTP_STATUSES} from "../types/statutes";
 import {NewCommentInput} from "../types/comments/comments";
 import {CommentValidation} from "../middleware/comment/comment-validation";
 import {postsService} from "../domain (business layer)/posts-service";
+import {ErrorsValidation} from "../middleware/errorsValidation";
 
 export const commentsRouter = Router({})
 
@@ -13,7 +14,8 @@ export const commentsRouter = Router({})
 commentsRouter.put(
     '/:id',
     BearerAuthMiddleware,
-    CommentValidation(), // почему вызываю, как функцию
+    CommentValidation(),
+    ErrorsValidation,
     async (
         req: RequestWithParams<{ id:string}>
             & RequestWithBody<NewCommentInput>,

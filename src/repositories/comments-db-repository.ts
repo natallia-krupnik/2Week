@@ -63,10 +63,10 @@ export const commentsDbRepository = {
             .toArray()
 
         const totalCount = await dbCollectionComments.countDocuments(postId? {postId:postId} : {})
-        const pageCount = Math.ceil(totalCount/ pageSize)
+        const pagesCount = Math.ceil(totalCount/ pageSize)
 
         return {
-            pageCount,
+            pagesCount,
             page: pageNumber,
             pageSize,
             totalCount,
