@@ -1,7 +1,7 @@
 import { body } from "express-validator";
 import {usersRepository} from "../../repositories/users-db-repository";
 
-export const AuthValidation = ()=> {
+export const RegistrationValidation = ()=> {
     return [
         body('login')
             .notEmpty()

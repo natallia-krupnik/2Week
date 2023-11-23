@@ -1,4 +1,6 @@
 import {WithId} from "mongodb";
+import {v4 as uuidv4} from "uuid";
+import {add} from "date-fns";
 //Auth
 
 export type AuthInputType = {
@@ -21,6 +23,38 @@ export type NewUserType = {
     passwordHash: string,
     passwordSalt: string,
     createdAt: string
+}
+
+export type NewAuthUserType = {
+    accountData: {
+        login: string,
+        email: string,
+        passwordHash: string,
+        passwordSalt: string,
+        createdAt: string
+    },
+    emailConfirmation: EmailConfirmation
+}
+
+export type EmailConfirmation = {
+    confirmationCode: string,
+    expirationDate: Date,
+    isConfirmed: boolean
+}
+export type NewAuthUserViewType = {
+    id: string,
+    accountData: {
+        login: string,
+        email: string,
+        passwordHash: string,
+        passwordSalt: string,
+        createdAt: string
+    },
+    emailConfirmation: {
+        confirmationCode: string,
+        expirationDate: Date,
+        isConfirmed: boolean
+    },
 }
 export interface  ExtendsQueryParamsInput extends QueryParamsInput {
     searchLoginTerm?: string,
@@ -91,27 +125,7 @@ export type QueryTypeViewBlogs = {
     pageNumber: number;
 }
 
-
-// The END
-
-
-
-
-
-
 export type PostDBType = WithId<PostType>
-
-// export interface PostType  {
-//     title: string,
-//     shortDescription: string,
-//     content: string,
-//     blogId: string,
-//     blogName: string,
-//     createdAt: string
-// }
-// interface ExtendsType extends PostType{
-//     id: string,
-// }
 
 type NewType = PostType & { id: string}
 

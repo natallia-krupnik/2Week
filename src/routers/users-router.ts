@@ -1,7 +1,7 @@
 import {Request, Response, Router} from "express";
 import {RequestWithBody, RequestWithParams} from "../types/requests";
 import {ExtendsQueryParamsInput, UserInputType, UserViewType} from "../types/types";
-import {AuthValidation} from "../middleware/auth/auth-validation-middleware";
+import {RegistrationValidation} from "../middleware/auth/registration-validation-middleware";
 import {usersService} from "../domain (business layer)/users-service";
 import {HTTP_STATUSES} from "../types/statutes";
 import {BaseAuthMiddleware} from "../middleware/baseAuthMiddleware";
@@ -26,7 +26,7 @@ usersRouter.get (
 usersRouter.post(
     '/',
     BaseAuthMiddleware,
-    AuthValidation(),
+    RegistrationValidation(),
     ErrorsValidation,
     async (req: RequestWithBody<UserInputType>, res: Response<UserViewType>) => {
 

@@ -1,7 +1,7 @@
 import dotenv from 'dotenv'
 dotenv.config()
 import { MongoClient } from "mongodb";
-import {BlogType, NewUserType, PostDBType, PostType} from "../types/types";
+import {BlogType, NewAuthUserType, NewUserType, PostDBType, PostType} from "../types/types";
 import {NewCommentDB} from "../types/comments/comments";
 
 const mongoUri = process.env.MONGO_URL || ''
@@ -13,7 +13,7 @@ export const dbCollectionComments = db.collection<NewCommentDB>('comments')
 export const dbCollectionBlog = db.collection <BlogType> ('blogs')
 export const dbCollectionPost = db.collection <PostType> ('posts')
 
-export const dbCollectionUser = db.collection<NewUserType>('users')
+export const dbCollectionUser = db.collection<NewAuthUserType>('users')
 
 export async function runDb(){
     try {
